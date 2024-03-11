@@ -45,4 +45,28 @@ public class RelatorioMensalCategoria implements Relatorio {
 
         System.out.println("Relatório gerado com sucesso.");
     }
+
+    public Date getData() {
+        return data;
+    }
+
+    public void setData(Date data) {
+        this.data = data;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public ControleEstoque getControleEstoque() {
+        return controleEstoque;
+    }
+
+    public void setControleEstoque(ControleEstoque controleEstoque) {
+        this.controleEstoque = controleEstoque;
+    }
 }
