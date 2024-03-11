@@ -1,5 +1,6 @@
-package backend.cohive;
+package Controllers;
 
+import Entidades.Usuario;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,15 +47,15 @@ public class UsuarioController {
     public ResponseEntity<List<Usuario>> removerPorIndice(@PathVariable int indice){
         if (isIndiceValid(indice)){
             usuarios.remove(indice);
-            return ResponseEntity.status(201).body(usuarios);
+            return ResponseEntity.status(204).build();
         }
 
         return ResponseEntity.status(404).build();
     }
 
+
     private boolean isIndiceValid(int indice){
         return indice >= 0 && indice < usuarios.size();
     }
-
 
 }

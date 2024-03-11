@@ -1,19 +1,21 @@
-package backend.cohive;
+package Entidades;
 
 public class Produto {
     private String nome;
     private String categoria;
     private Double valor;
     private String descricao;
+    private Integer id;
 
     public Produto() {
     }
 
-    public Produto(String nome, String categoria, Double valor, String descricao) {
+    public Produto(String nome, String categoria, Double valor, String descricao, Integer id) {
         this.nome = nome;
         this.categoria = categoria;
         this.valor = valor;
         this.descricao = descricao;
+        this.id = id;
     }
 
     public String getNome() {
@@ -48,13 +50,11 @@ public class Produto {
         this.descricao = descricao;
     }
 
-    @Override
-    public String toString() {
-        return "Produto{" +
-                "nome='" + nome + '\'' +
-                ", categoria='" + categoria + '\'' +
-                ", valor=" + valor +
-                ", descricao='" + descricao + '\'' +
-                '}';
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

@@ -1,4 +1,4 @@
-package backend.cohive;
+package Entidades;
 
 public class Usuario {
     private String nome;
