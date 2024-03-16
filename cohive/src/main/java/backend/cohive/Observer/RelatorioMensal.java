@@ -9,12 +9,12 @@ import java.util.List;
 public class RelatorioMensal implements Relatorio {
     private Date data;
     private String descricao;
-    private ControleEstoque controleEstoque;
 
-    public RelatorioMensal(Date data, String descricao, ControleEstoque controleEstoque) {
+    ControleEstoque controleEstoque = new ControleEstoque();
+
+    public RelatorioMensal(Date data, String descricao) {
         this.data = data;
         this.descricao = descricao;
-        this.controleEstoque = controleEstoque;
     }
 
     @Override
@@ -49,11 +49,4 @@ public class RelatorioMensal implements Relatorio {
         this.descricao = descricao;
     }
 
-    public ControleEstoque getControleEstoque() {
-        return controleEstoque;
-    }
-
-    public void setControleEstoque(ControleEstoque controleEstoque) {
-        this.controleEstoque = controleEstoque;
-    }
 }

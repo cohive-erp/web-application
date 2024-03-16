@@ -13,25 +13,25 @@ import java.util.Date;
 @RequestMapping("/relatorios")
 public class RelatorioController {
 
-    private ControleEstoque controleEstoque;
+    ControleEstoque controleEstoque = new ControleEstoque();
 
-    @GetMapping("/relatorioMensal")
+    @GetMapping("/relatorio-mensal")
     public ResponseEntity<String> gerarRelatorioMensal() {
         Date data = new Date(); // Obtém a data atual
         String descricao = "Relatório Mensal de Produtos por Preço";
 
-        RelatorioMensal relatorioMensal = new RelatorioMensal(data, descricao, controleEstoque);
+        RelatorioMensal relatorioMensal = new RelatorioMensal(data, descricao);
         relatorioMensal.gerarRelatorio();
 
         return ResponseEntity.status(200).body("Relatório mensal gerado com sucesso.");
     }
 
-    @GetMapping("/relatorioMensalPorCategoria")
+    @GetMapping("/relatorio-mensal-por-categoria")
     public ResponseEntity<String> gerarRelatorioMensalPorCategoria() {
         Date data = new Date(); // Obtém a data atual
         String descricao = "Relatório Mensal de Produtos por Categoria";
 
-        RelatorioMensalCategoria relatorioMensalCategoria = new RelatorioMensalCategoria(data, descricao, controleEstoque);
+        RelatorioMensalCategoria relatorioMensalCategoria = new RelatorioMensalCategoria(data, descricao);
         relatorioMensalCategoria.gerarRelatorio();
 
         return ResponseEntity.status(200).body("Relatório mensal por categoria gerado com sucesso.");

@@ -10,18 +10,17 @@ import java.util.List;
 @RestController
 @RequestMapping("/estoque")
 public class EstoqueController {
-
-    private ControleEstoque controleEstoque;
+    ControleEstoque controleEstoque = new ControleEstoque();
 
     // Endpoint para adicionar um novo produto ao estoque
-    @PostMapping("/adicionar")
+    @PostMapping
     public ResponseEntity<Produto> adicionarProduto(@RequestBody Produto produto) {
         controleEstoque.adicionarProduto(produto);
         return ResponseEntity.status(200).body(produto);
     }
 
     // Endpoint para remover um produto do estoque
-    @DeleteMapping("/remover/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> removerProduto(@PathVariable int id) {
         Produto produto = controleEstoque.obterProdutoPorId(id);
         if (produto != null) {
@@ -33,7 +32,7 @@ public class EstoqueController {
     }
 
     // Endpoint para obter o estoque atual
-    @GetMapping("/estoque")
+    @GetMapping
     public ResponseEntity<List<Produto>> listarEstoque() {
         List<Produto> estoque = controleEstoque.getEstoque();
         return ResponseEntity.status(200).body(estoque);

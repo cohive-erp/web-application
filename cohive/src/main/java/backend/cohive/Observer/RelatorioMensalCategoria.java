@@ -8,12 +8,12 @@ import backend.cohive.Entidades.Produto;
 public class RelatorioMensalCategoria implements Relatorio {
     private Date data;
     private String descricao;
-    private ControleEstoque controleEstoque;
 
-    public RelatorioMensalCategoria(Date data, String descricao, ControleEstoque controleEstoque) {
+    ControleEstoque controleEstoque = new ControleEstoque();
+
+    public RelatorioMensalCategoria(Date data, String descricao) {
         this.data = data;
         this.descricao = descricao;
-        this.controleEstoque = controleEstoque;
     }
 
     @Override
@@ -62,11 +62,4 @@ public class RelatorioMensalCategoria implements Relatorio {
         this.descricao = descricao;
     }
 
-    public ControleEstoque getControleEstoque() {
-        return controleEstoque;
-    }
-
-    public void setControleEstoque(ControleEstoque controleEstoque) {
-        this.controleEstoque = controleEstoque;
-    }
 }

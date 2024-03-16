@@ -8,29 +8,29 @@ import java.util.List;
 import java.util.Set;
 
 public class ControleEstoque {
-    private List<Produto> produtos;
+    private List<Produto> estoque;
 
     public ControleEstoque() {
-        this.produtos = new ArrayList<>();
+        this.estoque = new ArrayList<>();
     }
 
     // Adiciona um novo produto ao estoque
     public void adicionarProduto(Produto produto) {
-        produtos.add(produto);
+        estoque.add(produto);
     }
 
     // Remove um produto do estoque
     public void removerProduto(Produto produto) {
-        produtos.remove(produto);
+        estoque.remove(produto);
     }
 
-    // Retorna o estoque atual de todos os produtos
+    // Retorna o estoque atual de todos os estoque
     public List<Produto> getEstoque() {
-        return produtos;
+        return estoque;
     }
 
     public Produto obterProdutoPorId(int id) {
-        for (Produto produto : produtos) {
+        for (Produto produto : estoque) {
             if (produto.getId() == id) {
                 return produto;
             }
@@ -38,10 +38,10 @@ public class ControleEstoque {
         return null; // Retorna null se o produto não for encontrado
     }
 
-    // Método para obter todas as categorias de produtos
+    // Método para obter todas as categorias de estoque
     public List<String> obterCategorias() {
         Set<String> categoriasSet = new HashSet<>();
-        for (Produto produto : produtos) {
+        for (Produto produto : estoque) {
             categoriasSet.add(produto.getCategoria());
         }
         return new ArrayList<>(categoriasSet);
