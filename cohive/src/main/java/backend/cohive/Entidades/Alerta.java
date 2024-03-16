@@ -1,4 +1,4 @@
-package Entidades;
+package backend.cohive.Entidades;
 
 import java.time.LocalDateTime;
 

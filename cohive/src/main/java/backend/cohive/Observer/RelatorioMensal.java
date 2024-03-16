@@ -1,7 +1,7 @@
-package Observer;
+package backend.cohive.Observer;
 
 import backend.cohive.ControleEstoque;
-import Entidades.Produto;
+import backend.cohive.Entidades.Produto;
 
 import java.util.Date;
 import java.util.List;

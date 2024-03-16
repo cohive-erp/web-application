@@ -1,6 +1,6 @@
-package Controllers;
+package backend.cohive.Controllers;
 
-import Entidades.Usuario;
+import backend.cohive.Entidades.Usuario;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +15,8 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<Usuario> cadastar(@RequestBody Usuario usuarioNovo){
-        if (usuarioNovo.getNome() == null) {
-            return ResponseEntity.status(404).build();
+        if (usuarioNovo.getEmail() == null) {
+            return ResponseEntity.status(400).build();
         }
         usuarios.add(usuarioNovo);
 

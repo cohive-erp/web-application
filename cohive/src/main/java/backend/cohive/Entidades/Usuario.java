@@ -1,4 +1,4 @@
-package Entidades;
+package backend.cohive.Entidades;
 
 public class Usuario {
     private String nome;
@@ -65,17 +65,5 @@ public class Usuario {
 
     public void setNivelAcesso(String nivelAcesso) {
         this.nivelAcesso = nivelAcesso;
-    }
-
-    @Override
-    public String toString() {
-        return "Usuario{" +
-                "nome='" + nome + '\'' +
-                ", sobrenome='" + sobrenome + '\'' +
-                ", numeroCelular='" + numeroCelular + '\'' +
-                ", email='" + email + '\'' +
-                ", senha='" + senha + '\'' +
-                ", nivelAcesso='" + nivelAcesso + '\'' +
-                '}';
     }
 }

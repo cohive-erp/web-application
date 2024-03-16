@@ -1,4 +1,4 @@
-package Entidades;
+package backend.cohive.Entidades;
 
 public class Produto {
     private String nome;

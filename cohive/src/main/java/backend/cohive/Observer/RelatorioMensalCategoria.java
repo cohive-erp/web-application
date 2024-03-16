@@ -1,9 +1,9 @@
-package Observer;
+package backend.cohive.Observer;
 
 import java.util.Date;
 import java.util.List;
 import backend.cohive.ControleEstoque;
-import Entidades.Produto;
+import backend.cohive.Entidades.Produto;
 
 public class RelatorioMensalCategoria implements Relatorio {
     private Date data;

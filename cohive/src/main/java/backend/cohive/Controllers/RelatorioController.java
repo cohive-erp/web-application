@@ -1,10 +1,8 @@
-package Controllers;
+package backend.cohive.Controllers;
 
-import Observer.RelatorioMensal;
-import Observer.RelatorioMensalCategoria;
+import backend.cohive.Observer.RelatorioMensal;
+import backend.cohive.Observer.RelatorioMensalCategoria;
 import backend.cohive.ControleEstoque;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
