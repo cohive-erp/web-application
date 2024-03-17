@@ -29,6 +29,25 @@ public class ControleEstoque {
         return estoque;
     }
 
+    public int getQuantidadeProduto(String nome) {
+        int quantidade = 0;
+        for (Produto produto : estoque) {
+            if (produto.getNome().equals(nome)) {
+                quantidade++;
+            }
+        }
+        return quantidade;
+    }
+    public int getQuantdadeProdutoPorCategoria(String categoria){
+        int quantidade = 0;
+        for (Produto produto : estoque){
+            if (categoria.equals(produto.getCategoria())){
+                quantidade++;
+            }
+        }
+        return quantidade;
+    }
+
     public Produto obterProdutoPorId(int id) {
         for (Produto produto : estoque) {
             if (produto.getId() == id) {
