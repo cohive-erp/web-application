@@ -5,21 +5,19 @@ import java.util.List;
 import backend.cohive.ControleEstoque;
 import backend.cohive.Entidades.Produto;
 
-public class RelatorioMensalCategoria implements Relatorio {
-    private Date data;
-    private String descricao;
+public class RelatorioMensalCategoria extends Relatorio {
 
-    ControleEstoque controleEstoque = new ControleEstoque();
-
-    public RelatorioMensalCategoria(Date data, String descricao) {
-        this.data = data;
-        this.descricao = descricao;
+    public RelatorioMensalCategoria(Date data, String descricao, ControleEstoque controleEstoque) {
+        super(data, descricao);
+        this.controleEstoque = controleEstoque;
     }
+
+    private ControleEstoque controleEstoque = new ControleEstoque();
 
     @Override
     public void gerarRelatorio() {
-        System.out.println("Relatório Mensal por Categoria - Data: " + data);
-        System.out.println("Descrição: " + descricao);
+        System.out.println("Relatório Mensal por Categoria - Data: " + getData());
+        System.out.println("Descrição: " + getDescricao());
 
         List<Produto> estoque = controleEstoque.getEstoque();
 
@@ -44,22 +42,6 @@ public class RelatorioMensalCategoria implements Relatorio {
         }
 
         System.out.println("Relatório gerado com sucesso.");
-    }
-
-    public Date getData() {
-        return data;
-    }
-
-    public void setData(Date data) {
-        this.data = data;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
     }
 
 }
