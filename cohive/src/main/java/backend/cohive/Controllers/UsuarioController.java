@@ -17,9 +17,9 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<Usuario> cadastrar(@RequestBody Usuario usuario){
-        Usuario usuarioSalvo = this.repository.save(usuario);
+        final Usuario usuarioSalvo = this.repository.save(usuario);
 
-        return ResponseEntity.status(200).body(usuarioSalvo);
+        return ResponseEntity.status(201).body(usuarioSalvo);
     }
 
     @GetMapping
