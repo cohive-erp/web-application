@@ -64,4 +64,10 @@ public class UsuarioController {
         this.repository.deleteById(id);
         return ResponseEntity.status(204).build();
     }
+
+    @GetMapping("/contagem")
+    public ResponseEntity<Long> contar() {
+        long totalUsuarios = (int) this.repository.count();
+        return ResponseEntity.status(200).body(totalUsuarios);
+    }
 }
