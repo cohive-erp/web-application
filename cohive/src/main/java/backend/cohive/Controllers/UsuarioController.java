@@ -55,22 +55,13 @@ public class UsuarioController {
         return ResponseEntity.status(200).body(usuarioSalvo);
     }
 
-    @DeleteMapping("/{indice}")
-    public ResponseEntity<List<Usuario>> removerPorIndice(@PathVariable int indice){
-        List<Usuario> usuarios = this.repository.findAll();
-
-        if (isIndiceValid(indice)){
-            usuarios.remove(indice);
-            return ResponseEntity.status(204).build();
+    @DeleteMapping("/{id}")
+    public ResponseEntity<List<Usuario>> remover(@PathVariable Integer id){
+        if (!this.repository.existsById(id)) {
+            return ResponseEntity.status(404).build();
         }
 
-        return ResponseEntity.status(404).build();
+        this.repository.deleteById(id);
+        return ResponseEntity.status(204).build();
     }
-
-
-    private boolean isIndiceValid(int indice){
-        List<Usuario> usuarios = this.repository.findAll();
-        return indice >= 0 && indice < usuarios.size();
-    }
-
 }
