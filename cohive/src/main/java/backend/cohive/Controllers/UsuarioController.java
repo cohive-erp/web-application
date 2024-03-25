@@ -38,15 +38,10 @@ public class UsuarioController {
         // Previnir NPE (NullPointerException)
         Optional<Usuario> usuarioOpt = this.repository.findById(id);
 
-        if (usuarioOpt.isEmpty()){
-            return ResponseEntity.status(404).build();
-        }
-
-        Usuario usuarioEncontrado = usuarioOpt.get();
-        return ResponseEntity.status(200).body(usuarioEncontrado);
+        return ResponseEntity.of(usuarioOpt);
     }
 
-    @PutMapping("/{indice}")
+    @PutMapping("/{id}")
     public ResponseEntity<Usuario> atualizar(
             @PathVariable int indice,
             @RequestBody Usuario usuarioAtualizado
