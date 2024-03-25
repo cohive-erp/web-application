@@ -43,17 +43,16 @@ public class UsuarioController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Usuario> atualizar(
-            @PathVariable int indice,
+            @PathVariable Integer id,
             @RequestBody Usuario usuarioAtualizado
     ) {
-        List<Usuario> usuarios = this.repository.findAll();
-
-        if (isIndiceValid(indice)){
-            usuarios.set(indice, usuarioAtualizado);
-            return ResponseEntity.status(201).body(usuarioAtualizado);
+        if (!this.repository.existsById(id)) {
+            return ResponseEntity.status(404).build();
         }
 
-        return ResponseEntity.status(404).build();
+        usuarioAtualizado.setId(id);
+        Usuario usuarioSalvo = this.repository.save(usuarioAtualizado);
+        return ResponseEntity.status(200).body(usuarioSalvo);
     }
 
     @DeleteMapping("/{indice}")
