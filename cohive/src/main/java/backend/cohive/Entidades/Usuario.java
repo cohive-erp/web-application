@@ -1,6 +1,8 @@
 package backend.cohive.Entidades;
 
+
 public class Usuario {
+    private Integer id;
     private String nome;
     private String sobrenome;
     private String numeroCelular;
@@ -17,6 +19,14 @@ public class Usuario {
         this.email = email;
         this.senha = senha;
         this.nivelAcesso = nivelAcesso;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getNome() {
