@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Backend-Cohive.iml" filepath="$PROJECT_DIR$/.idea/Backend-Cohive.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cohive.iml" filepath="$PROJECT_DIR$/cohive.iml" />
     </modules>
   </component>
 </project>
