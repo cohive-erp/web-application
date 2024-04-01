@@ -1,7 +1,4 @@
-package backend.cohive.Observer;
-
-import backend.cohive.ControleEstoque;
-import org.yaml.snakeyaml.nodes.CollectionNode;
+package backend.cohive.observer;
 
 import java.util.Date;
 

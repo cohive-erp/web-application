@@ -1,4 +1,4 @@
-package backend.cohive.Entidades;
+package backend.cohive.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

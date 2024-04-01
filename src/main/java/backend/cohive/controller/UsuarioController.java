@@ -1,7 +1,7 @@
-package backend.cohive.Controllers;
+package backend.cohive.controller;
 
-import backend.cohive.Entidades.Usuario;
-import backend.cohive.Repository.UsuarioRepository;
+import backend.cohive.entity.Usuario;
+import backend.cohive.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

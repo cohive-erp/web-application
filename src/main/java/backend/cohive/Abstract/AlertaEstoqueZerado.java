@@ -1,7 +1,7 @@
 package backend.cohive.Abstract;
 
 import backend.cohive.ControleEstoque;
-import backend.cohive.Entidades.Produto;
+import backend.cohive.entity.Produto;
 
 import java.time.LocalDateTime;
 

@@ -1,6 +1,6 @@
 package backend.cohive;
 
-import backend.cohive.Entidades.Produto;
+import backend.cohive.entity.Produto;
 
 import java.util.ArrayList;
 import java.util.HashSet;

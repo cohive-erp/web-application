@@ -1,6 +1,6 @@
-package backend.cohive.Controllers;
+package backend.cohive.controller;
 
-import backend.cohive.Entidades.Produto;
+import backend.cohive.entity.Produto;
 import backend.cohive.ControleEstoque;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
