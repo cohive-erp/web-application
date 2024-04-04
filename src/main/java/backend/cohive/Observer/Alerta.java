@@ -1,4 +1,4 @@
-package backend.cohive.Abstract;
+package backend.cohive.Observer;
 
 import java.time.LocalDateTime;
 

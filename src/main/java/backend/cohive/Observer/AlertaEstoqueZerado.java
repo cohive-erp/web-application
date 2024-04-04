@@ -1,4 +1,4 @@
-package backend.cohive.Abstract;
+package backend.cohive.Observer;
 
 import backend.cohive.ControleEstoque;
 import backend.cohive.Entidades.Produto;
