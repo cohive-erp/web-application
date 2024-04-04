@@ -1,10 +1,9 @@
-package backend.cohive.Abstract;
+package backend.cohive.Observer;
 
-import backend.cohive.ControleEstoque;
+import  backend.cohive.ControleEstoque;
 import backend.cohive.Entidades.Produto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class AlertaEstoqueBaixo extends Alerta {
 
