@@ -1,4 +1,4 @@
-package backend.cohive.Entidades;
+package backend.cohive.domain.service.usuario;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,35 +17,22 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @NotBlank
-    @Size(min = 2, max = 50)
     private String nome;
-    @NotBlank
-    @Size(min = 2, max = 50)
-    private String sobrenome;
-
     private String numeroCelular;
-    @NotBlank
-    @Email
-    @Size(min = 7, max = 100)
     private String email;
-    @Size(min = 8, max = 50)
     private String senha;
-    @NotNull
-    private String nivelAcesso;
     @CreationTimestamp
     private LocalDate dataCadastro;
 
     public Usuario(){}
 
-    public Usuario(String nome, String sobrenome, String numeroCelular, String email, String senha, String nivelAcesso, LocalDate dataCadastro) {
+    public Usuario(Integer id, String nome, String numeroCelular, String email, String senha, LocalDate dataCadastro) {
+        this.id = id;
         this.nome = nome;
-        this.sobrenome = sobrenome;
         this.numeroCelular = numeroCelular;
         this.email = email;
         this.senha = senha;
-        this.nivelAcesso = nivelAcesso;
-        this.dataCadastro = LocalDate.now();
+        this.dataCadastro = dataCadastro;
     }
 
     public Integer getId() {
@@ -62,14 +49,6 @@ public class Usuario {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public String getSobrenome() {
-        return sobrenome;
-    }
-
-    public void setSobrenome(String sobrenome) {
-        this.sobrenome = sobrenome;
     }
 
     public String getNumeroCelular() {
@@ -94,14 +73,6 @@ public class Usuario {
 
     public void setSenha(String senha) {
         this.senha = senha;
-    }
-
-    public String getNivelAcesso() {
-        return nivelAcesso;
-    }
-
-    public void setNivelAcesso(String nivelAcesso) {
-        this.nivelAcesso = nivelAcesso;
     }
 
     public LocalDate getDataCadastro() {
