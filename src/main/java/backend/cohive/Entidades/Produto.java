@@ -1,21 +1,38 @@
 package backend.cohive.Entidades;
 
-public class Produto {
-    private String nome;
-    private String categoria;
-    private Double valor;
-    private String descricao;
-    private Integer id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
-    public Produto() {
+@Entity
+public class Produto {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idProduto;
+    private String nome;
+    private String fabricante;
+    private String categoria;
+    private Double precoVenda;
+    private Double precoCompra;
+
+    public Produto() {}
+
+    public Produto(Integer idProduto, String nome, String fabricante, String categoria, Double precoVenda, Double precoCompra) {
+        this.idProduto = idProduto;
+        this.nome = nome;
+        this.fabricante = fabricante;
+        this.categoria = categoria;
+        this.precoVenda = precoVenda;
+        this.precoCompra = precoCompra;
     }
 
-    public Produto(String nome, String categoria, Double valor, String descricao, Integer id) {
-        this.nome = nome;
-        this.categoria = categoria;
-        this.valor = valor;
-        this.descricao = descricao;
-        this.id = id;
+    public Integer getIdProduto() {
+        return idProduto;
+    }
+
+    public void setIdProduto(Integer idProduto) {
+        this.idProduto = idProduto;
     }
 
     public String getNome() {
@@ -26,6 +43,14 @@ public class Produto {
         this.nome = nome;
     }
 
+    public String getFabricante() {
+        return fabricante;
+    }
+
+    public void setFabricante(String fabricante) {
+        this.fabricante = fabricante;
+    }
+
     public String getCategoria() {
         return categoria;
     }
@@ -34,27 +59,21 @@ public class Produto {
         this.categoria = categoria;
     }
 
-    public Double getValor() {
-        return valor;
+    public Double getPrecoVenda() {
+        return precoVenda;
     }
 
-    public void setValor(Double valor) {
-        this.valor = valor;
+    public void setPrecoVenda(Double precoVenda) {
+        this.precoVenda = precoVenda;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public Double getPrecoCompra() {
+        return precoCompra;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
+    public void setPrecoCompra(Double precoCompra) {
+        this.precoCompra = precoCompra;
     }
 }
+
+

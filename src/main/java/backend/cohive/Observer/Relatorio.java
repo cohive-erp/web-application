@@ -1,11 +1,17 @@
 package backend.cohive.Observer;
 
-import backend.cohive.ControleEstoque;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import org.yaml.snakeyaml.nodes.CollectionNode;
 
 import java.util.Date;
-
+@Entity
 public abstract class Relatorio {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private Date data;
     private String descricao;
 
