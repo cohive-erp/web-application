@@ -13,15 +13,19 @@ import java.util.Optional;
 
 @Service
 public class AutenticacaoService implements UserDetailsService {
+
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    // Método da interface implementada
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
         Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(username);
 
-        if (usuarioOpt.isEmpty()){
-            throw new UsernameNotFoundException(String.format("Usuário: %s não encontrado", username));
+        if (usuarioOpt.isEmpty()) {
+
+            throw new UsernameNotFoundException(String.format("usuario: %s nao encontrado", username));
         }
 
         return new UsuarioDetalhesDto(usuarioOpt.get());

@@ -8,12 +8,6 @@ import org.hibernate.validator.constraints.br.CNPJ;
 import org.hibernate.validator.constraints.br.CPF;
 
 public class LojaCriacaoDto {
-    @NotNull
-    @NotBlank
-    private String rua;
-    @NotNull
-    @NotBlank
-    private String bairro;
     @Positive
     @NotNull
     private Integer numero;
@@ -23,22 +17,6 @@ public class LojaCriacaoDto {
     @NotNull
     @org.hibernate.validator.constraints.br.CNPJ
     private String CNPJ;
-
-    public String getRua() {
-        return rua;
-    }
-
-    public void setRua(String rua) {
-        this.rua = rua;
-    }
-
-    public String getBairro() {
-        return bairro;
-    }
-
-    public void setBairro(String bairro) {
-        this.bairro = bairro;
-    }
 
     public Integer getNumero() {
         return numero;

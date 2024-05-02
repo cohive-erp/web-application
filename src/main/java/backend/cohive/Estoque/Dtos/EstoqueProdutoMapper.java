@@ -1,8 +1,9 @@
 package backend.cohive.Estoque.Dtos;
 
-import backend.cohive.Entidades.Estoque;
-import backend.cohive.Entidades.Produto;
+import backend.cohive.Estoque.Entidades.Estoque;
+import backend.cohive.Estoque.Entidades.Produto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EstoqueProdutoMapper {
@@ -35,6 +36,12 @@ public class EstoqueProdutoMapper {
         return produtoListagemDto;
     }
 
+    public static List<ProdutoListagemDto> toProdutoListagemDto(List<Estoque> estoque){
+        return estoque.stream()
+                .map(EstoqueProdutoMapper::toProdutoListagemDto)
+                .toList();
+    }
+
     public static EstoqueListagemDto toEstoqueListagemDto(Estoque estoque) {
         if (estoque == null) return null;
 
@@ -47,13 +54,11 @@ public class EstoqueProdutoMapper {
         return estoqueListagemDto;
     }
 
-    public static List<EstoqueListagemDto> toEstoqueListagemDto(List<Estoque> estoqueProdutos
-    ) {
+    public static List<EstoqueListagemDto> toEstoqueListagemDto(List<Estoque> estoqueProdutos) {
         return estoqueProdutos.stream()
-                .map(EstoqueProdutoMapper::toEstoqueListagemDto)
+                .map(estoque -> toEstoqueListagemDto(estoque))
                 .toList();
     }
-
     public static Produto toProduto(ProdutoCriacaoDto produtoCriacaoDto){
 
         if (produtoCriacaoDto == null) return null;
@@ -83,7 +88,6 @@ public class EstoqueProdutoMapper {
     }
 
     public static Estoque entradaAtualizacaoDto(EstoqueAtualizacaoDto estoqueAtualizacaoDto) {
-        if (estoqueAtualizacaoDto != null && estoqueAtualizacaoDto.getQuantidade() > 0) {
             Estoque estoqueNovo = new Estoque();
             estoqueNovo.setDataEntrada(estoqueAtualizacaoDto.getDataEntrada());
             estoqueNovo.setLoja(estoqueAtualizacaoDto.getLoja());
@@ -91,8 +95,6 @@ public class EstoqueProdutoMapper {
             estoqueNovo.setQuantidade(estoqueAtualizacaoDto.getQuantidade());
 
             return estoqueNovo;
-        }
-        return null;
     }
 
 }

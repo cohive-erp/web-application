@@ -1,23 +1,22 @@
 package backend.cohive.Estoque.Dtos;
 
-import backend.cohive.Entidades.Produto;
+import backend.cohive.Estoque.Entidades.Produto;
 import backend.cohive.Loja.Loja;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class EstoqueListagemDto {
-    private LocalDate dataEntrada;
+    private LocalDateTime dataEntrada;
     private Produto produto;
     private Loja loja;
     private int quantidade;
 
-    public LocalDate getDataEntrada() {
+    public LocalDateTime getDataEntrada() {
         return dataEntrada;
     }
 
-    public void setDataEntrada(LocalDate dataEntrada) {
+    public void setDataEntrada(LocalDateTime dataEntrada) {
         this.dataEntrada = dataEntrada;
     }
 
