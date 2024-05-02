@@ -1,5 +1,6 @@
 package backend.cohive.domain.service.usuario.dtos;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,6 +19,7 @@ public class UsuarioCriacaoDto {
     private String numeroCelular;
     @NotBlank
     @Email
+    @Schema(description = "Email do usuário", example = "rafael.reis@sptech.school")
     @Size(min = 7, max = 100)
     private String email;
     @Size(min = 8, max = 50)

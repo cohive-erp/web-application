@@ -1,17 +1,15 @@
-package backend.cohive.Entidades;
+package backend.cohive.Estoque.Entidades;
 
 import backend.cohive.Loja.Loja;
 import jakarta.persistence.*;
-import org.springframework.cglib.core.Local;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 public class Estoque {
-
     @Id
-    private LocalDate dataEntrada;
+    private LocalDateTime dataEntrada;
 
     @ManyToOne
     @JoinColumn(name = "id")
@@ -23,20 +21,11 @@ public class Estoque {
 
     private int quantidade;
 
-    public Estoque(){}
-
-    public Estoque(LocalDate dataEntrada, Produto produto, Loja loja, int quantidade) {
-        this.dataEntrada = dataEntrada;
-        this.produto = produto;
-        this.loja = loja;
-        this.quantidade = quantidade;
-    }
-
-    public LocalDate getDataEntrada() {
+    public LocalDateTime getDataEntrada() {
         return dataEntrada;
     }
 
-    public void setDataEntrada(LocalDate dataEntrada) {
+    public void setDataEntrada(LocalDateTime dataEntrada) {
         this.dataEntrada = dataEntrada;
     }
 

@@ -1,5 +1,6 @@
 package backend.cohive.Loja.Controller;
 
+import backend.cohive.Loja.Dtos.EnderecoDto;
 import backend.cohive.Loja.Dtos.LojaConsultaDto;
 import backend.cohive.Loja.Dtos.LojaCriacaoDto;
 import backend.cohive.Loja.Dtos.LojaMapper;
@@ -21,7 +22,8 @@ public class LojaController {
 
     @PostMapping
     public ResponseEntity<LojaConsultaDto> criar(@Valid @RequestBody LojaCriacaoDto lojaCriacaoDto){
-        Loja loja = LojaMapper.toEntity(lojaCriacaoDto);
+        EnderecoDto enderecoDto = (EnderecoController.buscarEndereco(lojaCriacaoDto.getCEP())).getBody();
+        Loja loja = LojaMapper.toEntity(lojaCriacaoDto, enderecoDto);
         Loja lojaSalva = lojaRepository.save(loja);
         LojaConsultaDto lojaConsultaDto = LojaMapper.toConsultaDto(loja);
 
