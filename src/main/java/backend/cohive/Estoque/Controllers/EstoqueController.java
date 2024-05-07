@@ -3,20 +3,19 @@ package backend.cohive.Estoque.Controllers;
 import backend.cohive.Estoque.Entidades.Estoque;
 import backend.cohive.Estoque.Entidades.Produto;
 import backend.cohive.Estoque.Dtos.*;
+import backend.cohive.Estoque.Entidades.TransacaoEstoque;
 import backend.cohive.Estoque.Repository.EstoqueRepository;
 import backend.cohive.Estoque.Repository.ProdutoRepository;
+import backend.cohive.Estoque.Repository.TransacaoEstoqueRepository;
 import backend.cohive.ListaObj;
-import backend.cohive.Loja.Loja;
+import backend.cohive.Loja.Entidades.Loja;
 import backend.cohive.Loja.Repository.LojaRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,9 +28,11 @@ public class EstoqueController {
     private EstoqueRepository estoqueRepository;
     @Autowired
     private LojaRepository lojaRepository;
+    @Autowired
+    private TransacaoEstoqueRepository transacaoEstoqueRepository;
 
     // Endpoint para adicionar um novo produto ao estoque
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<ProdutoListagemDto> cadastrarProdutoNovo(@RequestBody ProdutoCriacaoDto produtoCriacaoDto) {
         Optional<Loja> lojaOpt = lojaRepository.findById(produtoCriacaoDto.getIdLoja());
 
@@ -49,7 +50,7 @@ public class EstoqueController {
             ProdutoListagemDto produtoListagemDto = EstoqueProdutoMapper.toProdutoListagemDto(produtoSalvo);
 
             Estoque estoqueEntrada = new Estoque();
-            estoqueEntrada.setDataEntrada(LocalDateTime.now());
+            estoqueEntrada.setDataEntradaInicial(LocalDateTime.now());
             estoqueEntrada.setLoja(lojaEncontrada);
             estoqueEntrada.setProduto(produto);
             estoqueEntrada.setQuantidade(produtoCriacaoDto.getQuantidade());
@@ -63,7 +64,7 @@ public class EstoqueController {
 
     @PutMapping("/baixa-estoque")
     public ResponseEntity<EstoqueListagemDto> darBaixaProduto(@RequestBody @Valid EstoqueAtualizacaoDto estoqueAtualizacaoDto){
-        Optional<Estoque> estoqueOpt = estoqueRepository.findByDataEntrada(estoqueAtualizacaoDto.getDataEntrada());
+        Optional<Estoque> estoqueOpt = estoqueRepository.findByDataEntradaInicial(estoqueAtualizacaoDto.getDataEntradaInicial());
 
         if (estoqueOpt.isPresent()){
 
@@ -72,8 +73,14 @@ public class EstoqueController {
 
             if (estoqueBaixa == null) return ResponseEntity.status(404).build();
 
+            TransacaoEstoque transacaoEstoque = EstoqueProdutoMapper.toTransacaoEstoqueSaida(estoqueBaixa, estoqueOpt);
+
             estoqueRepository.save(estoqueBaixa);
+
+            transacaoEstoqueRepository.save(transacaoEstoque);
+
             EstoqueListagemDto estoqueListagemDto = EstoqueProdutoMapper.toEstoqueListagemDto(estoqueBaixa);
+
             return ResponseEntity.status(200).body(estoqueListagemDto);
         }
         return ResponseEntity.status(404).build();
@@ -81,7 +88,7 @@ public class EstoqueController {
 
     @PutMapping("/entrada-estoque")
     public ResponseEntity<EstoqueListagemDto> darEntradaProduto(@RequestBody @Valid EstoqueAtualizacaoDto estoqueAtualizacaoDto){
-        Optional<Estoque> estoqueOpt = estoqueRepository.findByDataEntrada(estoqueAtualizacaoDto.getDataEntrada());
+        Optional<Estoque> estoqueOpt = estoqueRepository.findByDataEntradaInicial(estoqueAtualizacaoDto.getDataEntradaInicial());
 
         if (estoqueOpt.isPresent()){
             Estoque estoqueEntrada = EstoqueProdutoMapper.entradaAtualizacaoDto(estoqueAtualizacaoDto);
@@ -89,8 +96,14 @@ public class EstoqueController {
 
             if (estoqueEntrada == null) return ResponseEntity.status(404).build();
 
+            TransacaoEstoque transacaoEstoque = EstoqueProdutoMapper.toTransacaoEstoqueEntrada(estoqueEntrada, estoqueOpt);
+
             estoqueRepository.save(estoqueEntrada);
+
+            transacaoEstoqueRepository.save(transacaoEstoque);
+
             EstoqueListagemDto estoqueListagemDto = EstoqueProdutoMapper.toEstoqueListagemDto(estoqueEntrada);
+
             return ResponseEntity.status(200).body(estoqueListagemDto);
         }
         return ResponseEntity.status(404).build();
@@ -150,21 +163,21 @@ public class EstoqueController {
 
     @GetMapping("/ordenarProdutos")
     public ResponseEntity<List<ProdutoListagemDto>> ordenarProdutos() {
-        // Buscar todos os produtos do repositório
+        // Busca todos os produtos do repositório
         List<Produto> produtosCadastrados = produtoRepository.findAll();
 
-        // Converter a lista de produtos para ListaObj de Produto
+        // Converte a lista de produtos para ListaObj de Produto
         ListaObj<Produto> listaProdutos = new ListaObj<>();
         for (Produto produto : produtosCadastrados) { // Utilize a lista original 'produtosCadastrados'
             listaProdutos.adicionar(produto);
         }
 
-        // Ordenar a lista de produtos por preço de venda
+        // Ordena a lista de produtos por preço de venda
         listaProdutos.ordenarPorPrecoVenda();
 
         // Converter a lista ordenada de Produto para ListaObj de EstoqueListagemDto
         ListaObj<ProdutoListagemDto> produtoListagemDtoListaObj = new ListaObj<>();
-        for (Produto produto : listaProdutos.getElementos()) { // Utilize a lista ordenada 'listaProdutos'
+        for (Produto produto : listaProdutos.getElementos()) { // Utiliza a lista ordenada 'listaProdutos'
             ProdutoListagemDto produtoListagemDto = EstoqueProdutoMapper.toProdutoListagemDto(produto);
             produtoListagemDtoListaObj.adicionar(produtoListagemDto);
         }

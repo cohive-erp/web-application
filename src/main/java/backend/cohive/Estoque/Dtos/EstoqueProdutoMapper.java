@@ -2,9 +2,12 @@ package backend.cohive.Estoque.Dtos;
 
 import backend.cohive.Estoque.Entidades.Estoque;
 import backend.cohive.Estoque.Entidades.Produto;
+import backend.cohive.Estoque.Entidades.TransacaoEstoque;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class EstoqueProdutoMapper {
 
@@ -46,7 +49,7 @@ public class EstoqueProdutoMapper {
         if (estoque == null) return null;
 
         EstoqueListagemDto estoqueListagemDto = new EstoqueListagemDto();
-        estoqueListagemDto.setDataEntrada(estoque.getDataEntrada());
+        estoqueListagemDto.setDataEntradaInicial(estoque.getDataEntradaInicial());
         estoqueListagemDto.setLoja(estoque.getLoja());
         estoqueListagemDto.setProduto(estoque.getProduto());
         estoqueListagemDto.setQuantidade(estoque.getQuantidade());
@@ -77,7 +80,7 @@ public class EstoqueProdutoMapper {
     public static Estoque saidaAtualizacaoDto(EstoqueAtualizacaoDto estoqueAtualizacaoDto){
         if (estoqueAtualizacaoDto.getQuantidade() > 0){
             Estoque estoqueNovo = new Estoque();
-            estoqueNovo.setDataEntrada(estoqueAtualizacaoDto.getDataEntrada());
+            estoqueNovo.setDataEntradaInicial(estoqueAtualizacaoDto.getDataEntradaInicial());
             estoqueNovo.setLoja(estoqueAtualizacaoDto.getLoja());
             estoqueNovo.setProduto(estoqueAtualizacaoDto.getProduto());
             estoqueNovo.setQuantidade(estoqueAtualizacaoDto.getQuantidade());
@@ -87,9 +90,30 @@ public class EstoqueProdutoMapper {
         return null;
     }
 
+    public static TransacaoEstoque toTransacaoEstoqueSaida(Estoque estoque, Optional<Estoque> estoqueOpt){
+        if (estoque == null) return null;
+
+        TransacaoEstoque transacaoEstoque = new TransacaoEstoque();
+        transacaoEstoque.setDataSaida(LocalDateTime.now());
+        transacaoEstoque.setQuantidadeAntesTransacao(estoqueOpt.get().getQuantidade());
+        transacaoEstoque.setEstoque(estoque);
+
+        return transacaoEstoque;
+    }
+
+    public static TransacaoEstoque toTransacaoEstoqueEntrada(Estoque estoque, Optional<Estoque> estoqueOpt){
+        if (estoque == null) return null;
+
+        TransacaoEstoque transacaoEstoque = new TransacaoEstoque();
+        transacaoEstoque.setDataEntradaNova(LocalDateTime.now());
+        transacaoEstoque.setQuantidadeAntesTransacao(estoqueOpt.get().getQuantidade());
+        transacaoEstoque.setEstoque(estoque);
+
+        return transacaoEstoque;
+    }
     public static Estoque entradaAtualizacaoDto(EstoqueAtualizacaoDto estoqueAtualizacaoDto) {
             Estoque estoqueNovo = new Estoque();
-            estoqueNovo.setDataEntrada(estoqueAtualizacaoDto.getDataEntrada());
+            estoqueNovo.setDataEntradaInicial(estoqueAtualizacaoDto.getDataEntradaInicial());
             estoqueNovo.setLoja(estoqueAtualizacaoDto.getLoja());
             estoqueNovo.setProduto(estoqueAtualizacaoDto.getProduto());
             estoqueNovo.setQuantidade(estoqueAtualizacaoDto.getQuantidade());

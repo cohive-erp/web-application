@@ -28,6 +28,9 @@ public class ListaObj<T> {
         return elementos;
     }
 
+    public void setLista(List<T> lista) {
+        this.elementos = lista;
+    }
     public void ordenarPorPrecoVenda() {
         int n = getTamanho();
         for (int i = 0; i < n - 1; i++) {

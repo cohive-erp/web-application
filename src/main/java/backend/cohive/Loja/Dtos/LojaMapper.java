@@ -1,6 +1,6 @@
 package backend.cohive.Loja.Dtos;
 
-import backend.cohive.Loja.Loja;
+import backend.cohive.Loja.Entidades.Loja;
 
 public class LojaMapper {
     public static Loja toEntity(LojaCriacaoDto lojaCriacaoDto, EnderecoDto enderecoDto){
