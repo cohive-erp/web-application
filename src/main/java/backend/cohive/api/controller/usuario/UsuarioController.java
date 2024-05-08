@@ -1,12 +1,18 @@
 package backend.cohive.api.controller.usuario;
 
 import backend.cohive.domain.service.UsuarioService;
+import backend.cohive.domain.service.usuario.Usuario;
 import backend.cohive.domain.service.usuario.autenticacao.dto.UsuarioLoginDto;
 import backend.cohive.domain.service.usuario.autenticacao.dto.UsuarioTokenDto;
+import backend.cohive.domain.service.usuario.dtos.UsuarioAtualizacaoDto;
 import backend.cohive.domain.service.usuario.dtos.UsuarioCriacaoDto;
+import backend.cohive.domain.service.usuario.dtos.UsuarioListagemDto;
+import backend.cohive.domain.service.usuario.dtos.UsuarioMapper;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,10 +24,11 @@ public class UsuarioController {
 
     @PostMapping
     @SecurityRequirement(name = "Bearer")
-    public ResponseEntity<Void> criar(@RequestBody @Valid UsuarioCriacaoDto usuarioCriacaoDto){
-        this.usuarioService.criar(usuarioCriacaoDto);
+    public ResponseEntity<UsuarioListagemDto> criar(@RequestBody @Valid UsuarioCriacaoDto usuarioCriacaoDto){
+        Usuario usuarioCriado = this.usuarioService.criar(usuarioCriacaoDto);
+        UsuarioListagemDto usuarioListagemDto = UsuarioMapper.toUsuarioListagemDto(usuarioCriado);
 
-        return ResponseEntity.status(201).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioListagemDto);
     }
 
     @PostMapping("/login")
@@ -30,53 +37,26 @@ public class UsuarioController {
 
         return ResponseEntity.status(200).body(usuarioTokenDto);
     }
-//
-//    @GetMapping
-//    public ResponseEntity<List<Usuario>> listarUsuarios(){
-//        List<Usuario> usuarios = this.repository.findAll();
-//
-//        if (usuarios.isEmpty()){
-//            return ResponseEntity.status(204).build();
-//        }
-//
-//        return ResponseEntity.status(200).body(usuarios);
-//    }
-//
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Usuario> buscarPorId(@PathVariable Integer id) {
-//        // Previnir NPE (NullPointerException)
-//        Optional<Usuario> usuarioOpt = this.repository.findById(id);
-//
-//        return ResponseEntity.of(usuarioOpt);
-//    }
-//
-//    @PutMapping("/{id}")
-//    public ResponseEntity<Usuario> atualizar(
-//            @PathVariable Integer id,
-//            @RequestBody Usuario usuarioAtualizado
-//    ) {
-//        if (!this.repository.existsById(id)) {
-//            return ResponseEntity.status(404).build();
-//        }
-//
-//        usuarioAtualizado.setId(id);
-//        Usuario usuarioSalvo = this.repository.save(usuarioAtualizado);
-//        return ResponseEntity.status(200).body(usuarioSalvo);
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<List<Usuario>> remover(@PathVariable Integer id){
-//        if (!this.repository.existsById(id)) {
-//            return ResponseEntity.status(404).build();
-//        }
-//
-//        this.repository.deleteById(id);
-//        return ResponseEntity.status(204).build();
-//    }
-//
-//    @GetMapping("/contagem")
-//    public ResponseEntity<Long> contar() {
-//        long totalUsuarios = (int) this.repository.count();
-//        return ResponseEntity.status(200).body(totalUsuarios);
-//    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UsuarioListagemDto> atualizarUsuario(@PathVariable Integer id, @RequestBody @Valid UsuarioAtualizacaoDto usuarioAtualizacaoDto)
+            throws ChangeSetPersister.NotFoundException {
+        if (usuarioService.existsById(id)) {
+            usuarioService.atualizar(id, usuarioAtualizacaoDto);
+            UsuarioListagemDto usuarioListagemDto = UsuarioMapper.toUsuarioListagemDto(usuarioService.findById(id));
+            return ResponseEntity.ok(usuarioListagemDto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluirUsuario(@PathVariable Integer id) {
+        if (usuarioService.existsById(id)) {
+            usuarioService.deleteById(id);
+            return ResponseEntity.status(204).build();
+        } else {
+            return ResponseEntity.status(404).build();
+        }
+    }
 }

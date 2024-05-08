@@ -21,6 +21,25 @@ public class LojaMapper {
         return loja;
     }
 
+    public static Loja toEntityAtualizacao(LojaCriacaoDto lojaCriacaoDto, EnderecoDto enderecoDto, int id){
+
+        if (lojaCriacaoDto == null){
+            return null;
+        }
+
+        Loja loja = new Loja();
+        loja.setIdLoja(id);
+        loja.setCEP(enderecoDto.getCep());
+        loja.setRua(enderecoDto.getRua());
+        loja.setBairro(enderecoDto.getBairro());
+        loja.setCidade(enderecoDto.getCidade());
+        loja.setEstado(enderecoDto.getEstado());
+        loja.setCNPJ(lojaCriacaoDto.getCNPJ());
+        loja.setNumero(lojaCriacaoDto.getNumero());
+
+        return loja;
+    }
+
     public static LojaConsultaDto toConsultaDto(Loja loja){
         if (loja == null){
             return null;
