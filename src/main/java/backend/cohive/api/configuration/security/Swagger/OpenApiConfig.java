@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
                 title = "Projeto Usuários",
                 description = "Implementação de JWT com Spring Security",
                 contact = @Contact(
-                        name = "Gustavo",
+                        name = "Gustavo Sena",
                         url = "https://github.com/cohive-erp/web-application",
                         email = "gustavo.sena@sptech.school"
                 ),
