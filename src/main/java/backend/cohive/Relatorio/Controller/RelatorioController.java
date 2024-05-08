@@ -23,13 +23,36 @@ public class RelatorioController {
     @GetMapping("/relatorio-transacoes")
     public ResponseEntity<String> gerarRelatorioTransacoesCSV(@RequestParam String nomeArquivo) {
         try {
-            relatorioService.gerarRelatoriotransacoesCSV(nomeArquivo);
+            relatorioService.gerarRelatorioTransacoesCSV(nomeArquivo);
+
             RelatorioEntidade relatorioEntidade = RelatorioMapper.fromTransacaotoRelatorioEntidade();
             RelatorioEntidade relatorioEntidadeNovo = relatorioService.criar(relatorioEntidade);
 
-            return ResponseEntity.ok(String.format("Relatório gerado com sucesso\nRelatório:\nIdRelatorio: %s\nDescrição: %s\nData Criação: %s", relatorioEntidadeNovo.getIdRelatorio(), relatorioEntidadeNovo.getDescricao(), relatorioEntidadeNovo.getDataCriacao()));
+            return ResponseEntity.ok(String.format(
+                    "Relatório gerado com sucesso\nRelatório:\nIdRelatorio: %s\nDescrição: %s\nData Criação: %s",
+                    relatorioEntidadeNovo.getIdRelatorio(),
+                    relatorioEntidadeNovo.getDescricao(),
+                    relatorioEntidadeNovo.getDataCriacao()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao gerar relatório: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/relatorio-mensal")
+    public ResponseEntity<String> gerarRelatorioMensalCSV(@RequestParam String nomeArquivo, @RequestParam Integer mes, @RequestParam Integer ano) {
+        try {
+            relatorioService.gerarRelatorioMensalCSV(nomeArquivo, mes, ano);
+
+            RelatorioEntidade relatorioEntidade = RelatorioMapper.fromTransacaotoRelatorioEntidade();
+            RelatorioEntidade relatorioEntidadeNovo = relatorioService.criar(relatorioEntidade);
+
+            return ResponseEntity.ok(String.format(
+                    "Relatório gerado com sucesso\nRelatório:\nIdRelatorio: %s\nDescrição: %s\nData Criação: %s",
+                    relatorioEntidadeNovo.getIdRelatorio(),
+                    relatorioEntidadeNovo.getDescricao(),
+                    relatorioEntidadeNovo.getDataCriacao()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao gerar relatório mensal: " + e.getMessage());
         }
     }
 }

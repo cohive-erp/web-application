@@ -5,9 +5,11 @@ import backend.cohive.domain.Repository.UsuarioRepository;
 import backend.cohive.domain.service.usuario.Usuario;
 import backend.cohive.domain.service.usuario.autenticacao.dto.UsuarioLoginDto;
 import backend.cohive.domain.service.usuario.autenticacao.dto.UsuarioTokenDto;
+import backend.cohive.domain.service.usuario.dtos.UsuarioAtualizacaoDto;
 import backend.cohive.domain.service.usuario.dtos.UsuarioCriacaoDto;
 import backend.cohive.domain.service.usuario.dtos.UsuarioMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,13 +33,13 @@ public class UsuarioService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    public void criar(UsuarioCriacaoDto usuarioCriacaoDto) {
+    public Usuario criar(UsuarioCriacaoDto usuarioCriacaoDto) {
         final Usuario novoUsuario = UsuarioMapper.of(usuarioCriacaoDto);
 
         String senhaCriptografada = passwordEncoder.encode(novoUsuario.getSenha());
         novoUsuario.setSenha(senhaCriptografada);
 
-        this.usuarioRepository.save(novoUsuario);
+        return this.usuarioRepository.save(novoUsuario);
     }
 
     public UsuarioTokenDto autenticar(UsuarioLoginDto usuarioLoginDto) {
@@ -58,5 +60,30 @@ public class UsuarioService {
         final String token = gerenciadorTokenJwt.generateToken(authentication);
 
         return UsuarioMapper.of(usuarioAutenticado, token);
+    }
+
+    public Usuario findById(Integer id) throws ChangeSetPersister.NotFoundException {
+        return usuarioRepository.findById(id)
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+    }
+
+    public boolean existsById(Integer id) {
+        return usuarioRepository.existsById(id);
+    }
+
+    public void deleteById(Integer id) {
+        usuarioRepository.deleteById(id);
+    }
+
+    public Usuario atualizar(Integer id, UsuarioAtualizacaoDto usuarioAtualizacaoDto) throws ChangeSetPersister.NotFoundException {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+        // Atualizar os campos do usuário com base nos dados do DTO de atualização
+        usuario.setNome(usuarioAtualizacaoDto.getNome());
+        usuario.setEmail(usuarioAtualizacaoDto.getEmail());
+        // Adicione outras atualizações necessárias
+
+        return usuarioRepository.save(usuario);
     }
 }

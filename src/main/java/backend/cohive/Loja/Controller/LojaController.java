@@ -12,9 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/loja")
+@RequestMapping("/lojas")
 public class LojaController {
     @Autowired
     private LojaRepository lojaRepository;
@@ -27,6 +28,40 @@ public class LojaController {
         LojaConsultaDto lojaConsultaDto = LojaMapper.toConsultaDto(loja);
 
         return ResponseEntity.status(201).body(lojaConsultaDto);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<LojaConsultaDto> atualizarLoja(@PathVariable int id, @Valid @RequestBody LojaCriacaoDto lojaCriacaoDto) {
+        // Verifica se a loja com o ID especificado existe no banco de dados
+        Optional<Loja> optionalLoja = lojaRepository.findById(id);
+        if (!optionalLoja.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Busca o endereço correspondente ao CEP fornecido
+        EnderecoDto enderecoDto = EnderecoController.buscarEndereco(lojaCriacaoDto.getCEP()).getBody();
+
+        // Converte o DTO em uma entidade Loja
+        Loja lojaAtualizada = LojaMapper.toEntityAtualizacao(lojaCriacaoDto, enderecoDto, id);
+
+        // Salva a loja atualizada no banco de dados
+        Loja lojaSalva = lojaRepository.save(lojaAtualizada);
+
+        // Converte a entidade Loja atualizada em um DTO de consulta
+        LojaConsultaDto lojaConsultaDto = LojaMapper.toConsultaDto(lojaSalva);
+
+        // Retorna uma resposta de sucesso com o DTO de consulta da loja atualizada
+        return ResponseEntity.ok(lojaConsultaDto);
+    }
+
+    @DeleteMapping("/{id}")
+    ResponseEntity<Void> deletarLoja(@PathVariable int id) {
+        Optional<Loja> optionalLoja = lojaRepository.findById(id);
+        if (!optionalLoja.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        lojaRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     // Este método será adicionado para procurar uma loja pelo CEP usando pesquisa binária
