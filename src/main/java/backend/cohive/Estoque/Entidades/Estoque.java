@@ -1,32 +1,28 @@
 package backend.cohive.Estoque.Entidades;
 
-import backend.cohive.Loja.Loja;
+import backend.cohive.Loja.Entidades.Loja;
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 public class Estoque {
     @Id
-    private LocalDateTime dataEntrada;
-
+    private LocalDateTime dataEntradaInicial;
     @ManyToOne
     @JoinColumn(name = "id")
     private Produto produto;
-
     @ManyToOne
     @JoinColumn(name = "loja")
     private Loja loja;
+    private Integer quantidade;
 
-    private int quantidade;
-
-    public LocalDateTime getDataEntrada() {
-        return dataEntrada;
+    public LocalDateTime getDataEntradaInicial() {
+        return dataEntradaInicial;
     }
 
-    public void setDataEntrada(LocalDateTime dataEntrada) {
-        this.dataEntrada = dataEntrada;
+    public void setDataEntradaInicial(LocalDateTime dataEntradaInicial) {
+        this.dataEntradaInicial = dataEntradaInicial;
     }
 
     public Produto getProduto() {
@@ -45,11 +41,11 @@ public class Estoque {
         this.loja = loja;
     }
 
-    public int getQuantidade() {
+    public Integer getQuantidade() {
         return quantidade;
     }
 
-    public void setQuantidade(int quantidade) {
+    public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
     }
 }

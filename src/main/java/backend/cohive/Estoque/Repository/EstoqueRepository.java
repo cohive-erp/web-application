@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EstoqueRepository extends JpaRepository<Estoque, LocalDate> {
-    Optional<Estoque> findByDataEntrada(LocalDateTime dataEntrada);
+    Optional<Estoque> findByDataEntradaInicial(LocalDateTime dataEntradaInicial);
 
     @Query("SELECT e FROM Estoque e")
     List<Estoque> findAllEstoque();

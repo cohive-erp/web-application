@@ -1,16 +1,15 @@
 package backend.cohive.Estoque.Dtos;
 
 import backend.cohive.Estoque.Entidades.Produto;
-import backend.cohive.Loja.Loja;
+import backend.cohive.Loja.Entidades.Loja;
 import jakarta.validation.constraints.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class EstoqueAtualizacaoDto {
     @NotNull
     @PastOrPresent
-    private LocalDateTime dataEntrada;
+    private LocalDateTime dataEntradaInicial;
     @NotNull
     private Produto produto;
     @NotNull
@@ -21,12 +20,12 @@ public class EstoqueAtualizacaoDto {
     @Max(1)
     private int quantidade;
 
-    public LocalDateTime getDataEntrada() {
-        return dataEntrada;
+    public LocalDateTime getDataEntradaInicial() {
+        return dataEntradaInicial;
     }
 
-    public void setDataEntrada(LocalDateTime dataEntrada) {
-        this.dataEntrada = dataEntrada;
+    public void setDataEntradaInicial(LocalDateTime dataEntradaInicial) {
+        this.dataEntradaInicial = dataEntradaInicial;
     }
 
     public Produto getProduto() {

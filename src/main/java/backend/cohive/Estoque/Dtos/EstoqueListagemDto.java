@@ -1,23 +1,22 @@
 package backend.cohive.Estoque.Dtos;
 
 import backend.cohive.Estoque.Entidades.Produto;
-import backend.cohive.Loja.Loja;
+import backend.cohive.Loja.Entidades.Loja;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class EstoqueListagemDto {
-    private LocalDateTime dataEntrada;
+    private LocalDateTime dataEntradaInicial;
     private Produto produto;
     private Loja loja;
     private int quantidade;
 
-    public LocalDateTime getDataEntrada() {
-        return dataEntrada;
+    public LocalDateTime getDataEntradaInicial() {
+        return dataEntradaInicial;
     }
 
-    public void setDataEntrada(LocalDateTime dataEntrada) {
-        this.dataEntrada = dataEntrada;
+    public void setDataEntradaInicial(LocalDateTime dataEntradaInicial) {
+        this.dataEntradaInicial = dataEntradaInicial;
     }
 
     public Produto getProduto() {
