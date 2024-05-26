@@ -7,6 +7,7 @@ import backend.cohive.Estoque.Entidades.TransacaoEstoque;
 import backend.cohive.Estoque.Repository.EstoqueRepository;
 import backend.cohive.Estoque.Repository.ProdutoRepository;
 import backend.cohive.Estoque.Repository.TransacaoEstoqueRepository;
+import backend.cohive.FilaObj;
 import backend.cohive.ListaObj;
 import backend.cohive.Loja.Entidades.Loja;
 import backend.cohive.Loja.Repository.LojaRepository;
@@ -34,7 +35,7 @@ public class EstoqueController {
     // Endpoint para adicionar um novo produto ao estoque
     @PostMapping
     public ResponseEntity<ProdutoListagemDto> cadastrarProdutoNovo(@RequestBody ProdutoCriacaoDto produtoCriacaoDto) {
-        Optional<Loja> lojaOpt = lojaRepository.findById(produtoCriacaoDto.getIdLoja());
+        Optional<Loja> lojaOpt = lojaRepository.findById(produtoCriacaoDto.getLoja().getIdLoja());
 
         if (lojaOpt.isPresent()){
             Loja lojaEncontrada = lojaOpt.get();
@@ -189,6 +190,7 @@ public class EstoqueController {
         // Retornar a lista ordenada de EstoqueListagemDto
         return ResponseEntity.status(200).body(produtoListagemDtoListaObj.getElementos());
     }
+
 //    public ResponseEntity<EstoqueListagemDto> listarProdutosObj(){
 //        Long<Estoque> esqt = estoqueRepository.count();
 //    }

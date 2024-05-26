@@ -1,5 +1,6 @@
 package backend.cohive.Loja.Dtos;
 
+import backend.cohive.domain.service.usuario.Usuario;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -17,6 +18,8 @@ public class LojaCriacaoDto {
     @NotNull
     @org.hibernate.validator.constraints.br.CNPJ
     private String CNPJ;
+    @NotNull
+    private Usuario usuario;
 
     public Integer getNumero() {
         return numero;
@@ -40,5 +43,13 @@ public class LojaCriacaoDto {
 
     public void setCNPJ(String CNPJ) {
         this.CNPJ = CNPJ;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 }

@@ -17,6 +17,7 @@ public class LojaMapper {
         loja.setEstado(enderecoDto.getEstado());
         loja.setCNPJ(lojaCriacaoDto.getCNPJ());
         loja.setNumero(lojaCriacaoDto.getNumero());
+        loja.setUsuario(lojaCriacaoDto.getUsuario());
 
         return loja;
     }
@@ -54,6 +55,7 @@ public class LojaMapper {
         lojaConsultaDto.setEstado(loja.getEstado());
         lojaConsultaDto.setNumero(loja.getNumero());
         lojaConsultaDto.setCNPJ(loja.getCNPJ());
+        lojaConsultaDto.setUsuario(loja.getUsuario());
 
         return lojaConsultaDto;
     }

@@ -1,9 +1,7 @@
 package backend.cohive.Estoque.Entidades;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import backend.cohive.Loja.Entidades.Loja;
+import jakarta.persistence.*;
 
 @Entity
 public class Produto {
@@ -15,6 +13,9 @@ public class Produto {
     private String categoria;
     private Double precoVenda;
     private Double precoCompra;
+    @ManyToOne
+    @JoinColumn(name = "loja")
+    private Loja loja;
 
     public Produto() {}
 
@@ -73,6 +74,14 @@ public class Produto {
 
     public void setPrecoCompra(Double precoCompra) {
         this.precoCompra = precoCompra;
+    }
+
+    public Loja getLoja() {
+        return loja;
+    }
+
+    public void setLoja(Loja loja) {
+        this.loja = loja;
     }
 }
 

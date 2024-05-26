@@ -1,5 +1,7 @@
 package backend.cohive.Loja.Dtos;
 
+import backend.cohive.domain.service.usuario.Usuario;
+
 public class LojaConsultaDto {
     private Integer idLoja;
     private String CEP;
@@ -9,6 +11,7 @@ public class LojaConsultaDto {
     private String estado;
     private Integer numero;
     private String CNPJ;
+    private Usuario usuario;
 
     public Integer getIdLoja() {
         return idLoja;
@@ -72,5 +75,13 @@ public class LojaConsultaDto {
 
     public void setCNPJ(String CNPJ) {
         this.CNPJ = CNPJ;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 }

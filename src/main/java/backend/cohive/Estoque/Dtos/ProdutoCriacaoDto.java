@@ -1,5 +1,6 @@
 package backend.cohive.Estoque.Dtos;
 
+import backend.cohive.Loja.Entidades.Loja;
 import jakarta.validation.constraints.*;
 
 public class ProdutoCriacaoDto {
@@ -22,12 +23,11 @@ public class ProdutoCriacaoDto {
     @NotNull
     @Positive
     private double precoCompra;
-    @NotNull
-    @Positive
-    private int idLoja;
     @Positive
     @NotNull
     private int quantidade;
+    @NotNull
+    private Loja loja;
 
     public String getNome() {
         return nome;
@@ -69,19 +69,19 @@ public class ProdutoCriacaoDto {
         this.precoCompra = precoCompra;
     }
 
-    public Integer getIdLoja() {
-        return idLoja;
-    }
-
-    public void setIdLoja(Integer idLoja) {
-        this.idLoja = idLoja;
-    }
-
     public int getQuantidade() {
         return quantidade;
     }
 
     public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
+    }
+
+    public Loja getLoja() {
+        return loja;
+    }
+
+    public void setLoja(Loja loja) {
+        this.loja = loja;
     }
 }

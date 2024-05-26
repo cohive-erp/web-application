@@ -4,7 +4,7 @@ import backend.cohive.domain.service.UsuarioService;
 import backend.cohive.domain.service.usuario.Usuario;
 import backend.cohive.domain.service.usuario.autenticacao.dto.UsuarioLoginDto;
 import backend.cohive.domain.service.usuario.autenticacao.dto.UsuarioTokenDto;
-import backend.cohive.domain.service.usuario.dtos.UsuarioAtualizacaoDto;
+import backend.cohive.domain.service.usuario.dtos.UsuarioAtualizacaoNumeroDto;
 import backend.cohive.domain.service.usuario.dtos.UsuarioCriacaoDto;
 import backend.cohive.domain.service.usuario.dtos.UsuarioListagemDto;
 import backend.cohive.domain.service.usuario.dtos.UsuarioMapper;
@@ -22,8 +22,7 @@ public class UsuarioController {
     @Autowired // Injeção de dep.
     private UsuarioService usuarioService;
 
-    @PostMapping
-    @SecurityRequirement(name = "Bearer")
+    @PostMapping("/cadastro")
     public ResponseEntity<UsuarioListagemDto> criar(@RequestBody @Valid UsuarioCriacaoDto usuarioCriacaoDto){
         Usuario usuarioCriado = this.usuarioService.criar(usuarioCriacaoDto);
         UsuarioListagemDto usuarioListagemDto = UsuarioMapper.toUsuarioListagemDto(usuarioCriado);
@@ -38,11 +37,11 @@ public class UsuarioController {
         return ResponseEntity.status(200).body(usuarioTokenDto);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UsuarioListagemDto> atualizarUsuario(@PathVariable Integer id, @RequestBody @Valid UsuarioAtualizacaoDto usuarioAtualizacaoDto)
+    @PutMapping("/atualizar-numero/{id}")
+    public ResponseEntity<UsuarioListagemDto> atualizarNumero(@PathVariable Integer id, @RequestBody @Valid UsuarioAtualizacaoNumeroDto usuarioAtualizacaoNumeroDto)
             throws ChangeSetPersister.NotFoundException {
         if (usuarioService.existsById(id)) {
-            usuarioService.atualizar(id, usuarioAtualizacaoDto);
+            usuarioService.atualizarNumero(id, usuarioAtualizacaoNumeroDto);
             UsuarioListagemDto usuarioListagemDto = UsuarioMapper.toUsuarioListagemDto(usuarioService.findById(id));
             return ResponseEntity.ok(usuarioListagemDto);
         } else {
@@ -50,13 +49,27 @@ public class UsuarioController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluirUsuario(@PathVariable Integer id) {
-        if (usuarioService.existsById(id)) {
-            usuarioService.deleteById(id);
-            return ResponseEntity.status(204).build();
+    @PostMapping("/request-password-reset")
+    public ResponseEntity<String> requestPasswordReset(@RequestParam String email) {
+        usuarioService.sendPasswordResetEmail(email);
+        return ResponseEntity.ok("Email de redefinição de senha enviado.");
+    }
+
+    @GetMapping("/validate-token")
+    public ResponseEntity<String> validateToken(@RequestParam String token) {
+        if (usuarioService.validatePasswordResetToken(token)) {
+            return ResponseEntity.ok("Token válido. Você pode alterar sua senha.");
         } else {
-            return ResponseEntity.status(404).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token inválido ou expirado.");
+        }
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
+        if (usuarioService.resetPassword(token, newPassword)) {
+            return ResponseEntity.ok("Senha alterada com sucesso.");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token inválido ou expirado.");
         }
     }
 }

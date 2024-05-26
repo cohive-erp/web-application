@@ -1,15 +1,19 @@
 package backend.cohive.domain.service;
 
 import backend.cohive.api.configuration.security.jwt.GerenciadorTokenJwt;
+import backend.cohive.api.configuration.security.jwt.JwtService;
 import backend.cohive.domain.Repository.UsuarioRepository;
 import backend.cohive.domain.service.usuario.Usuario;
 import backend.cohive.domain.service.usuario.autenticacao.dto.UsuarioLoginDto;
 import backend.cohive.domain.service.usuario.autenticacao.dto.UsuarioTokenDto;
-import backend.cohive.domain.service.usuario.dtos.UsuarioAtualizacaoDto;
+import backend.cohive.domain.service.usuario.dtos.UsuarioAtualizacaoNumeroDto;
 import backend.cohive.domain.service.usuario.dtos.UsuarioCriacaoDto;
 import backend.cohive.domain.service.usuario.dtos.UsuarioMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,6 +36,12 @@ public class UsuarioService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JavaMailSender mailSender;
+
+    @Autowired
+    private JwtService jwtService;
 
     public Usuario criar(UsuarioCriacaoDto usuarioCriacaoDto) {
         final Usuario novoUsuario = UsuarioMapper.of(usuarioCriacaoDto);
@@ -71,19 +81,49 @@ public class UsuarioService {
         return usuarioRepository.existsById(id);
     }
 
-    public void deleteById(Integer id) {
-        usuarioRepository.deleteById(id);
-    }
-
-    public Usuario atualizar(Integer id, UsuarioAtualizacaoDto usuarioAtualizacaoDto) throws ChangeSetPersister.NotFoundException {
+    public Usuario atualizarNumero(Integer id, UsuarioAtualizacaoNumeroDto usuarioAtualizacaoDto) throws ChangeSetPersister.NotFoundException {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
         // Atualizar os campos do usuário com base nos dados do DTO de atualização
-        usuario.setNome(usuarioAtualizacaoDto.getNome());
-        usuario.setEmail(usuarioAtualizacaoDto.getEmail());
+        usuario.setNumeroCelular(usuarioAtualizacaoDto.getNumeroCelular());
         // Adicione outras atualizações necessárias
 
         return usuarioRepository.save(usuario);
+    }
+
+
+    public void sendPasswordResetEmail(String email) {
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Email do usuário não cadastrado"));
+
+        String token = jwtService.createToken(email);
+        String resetUrl = "http://localhost:8080/usuarios/validate-token?token=" + token;
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject("Redefinição de Senha");
+        message.setText("Clique no link para redefinir sua senha: " + resetUrl);
+
+        mailSender.send(message);
+    }
+
+    public boolean validatePasswordResetToken(String token) {
+        return jwtService.isTokenValid(token);
+    }
+
+    public boolean resetPassword(String token, String newPassword) {
+        if (!jwtService.isTokenValid(token)) {
+            return false;
+        }
+
+        String email = jwtService.getEmailFromToken(token);
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+
+        usuario.setSenha(passwordEncoder.encode(newPassword));
+        usuarioRepository.save(usuario);
+
+        return true;
     }
 }

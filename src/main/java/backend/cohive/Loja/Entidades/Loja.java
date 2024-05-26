@@ -1,9 +1,8 @@
 package backend.cohive.Loja.Entidades;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import backend.cohive.Estoque.Entidades.Estoque;
+import backend.cohive.domain.service.usuario.Usuario;
+import jakarta.persistence.*;
 
 @Entity
 public class Loja {
@@ -17,6 +16,9 @@ public class Loja {
     private String estado;
     private Integer numero;
     private String CNPJ;
+    @JoinColumn(name = "usuario")
+    @ManyToOne
+    private Usuario usuario;
 
     public Integer getIdLoja() {
         return idLoja;
@@ -80,5 +82,13 @@ public class Loja {
 
     public void setCNPJ(String CNPJ) {
         this.CNPJ = CNPJ;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 }
