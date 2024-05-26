@@ -1,5 +1,7 @@
 package backend.cohive.Estoque.Dtos;
 
+import backend.cohive.Loja.Entidades.Loja;
+
 public class ProdutoListagemDto {
 
     private Integer id;
@@ -8,6 +10,7 @@ public class ProdutoListagemDto {
     private String categoria;
     private double precoVenda;
     private double precoCompra;
+    private Loja loja;
 
     public Integer getId() {
         return id;
@@ -57,4 +60,11 @@ public class ProdutoListagemDto {
         this.precoCompra = precoCompra;
     }
 
+    public Loja getLoja() {
+        return loja;
+    }
+
+    public void setLoja(Loja loja) {
+        this.loja = loja;
+    }
 }

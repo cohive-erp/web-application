@@ -21,6 +21,7 @@ public class EstoqueProdutoMapper {
         produtoListagemDto.setCategoria(produto.getCategoria());
         produtoListagemDto.setPrecoVenda(produto.getPrecoVenda());
         produtoListagemDto.setPrecoCompra(produto.getPrecoCompra());
+        produtoListagemDto.setLoja(produto.getLoja());
 
         return produtoListagemDto;
     }
@@ -35,6 +36,7 @@ public class EstoqueProdutoMapper {
         produtoListagemDto.setCategoria((estoque.getProduto().getCategoria()));
         produtoListagemDto.setPrecoVenda((estoque.getProduto().getPrecoVenda()));
         produtoListagemDto.setPrecoCompra((estoque.getProduto().getPrecoCompra()));
+        produtoListagemDto.setLoja(estoque.getLoja());
 
         return produtoListagemDto;
     }
@@ -73,6 +75,7 @@ public class EstoqueProdutoMapper {
         produto.setCategoria(produtoCriacaoDto.getCategoria());
         produto.setPrecoVenda(produtoCriacaoDto.getPrecoVenda());
         produto.setPrecoCompra(produtoCriacaoDto.getPrecoCompra());
+        produto.setLoja(produtoCriacaoDto.getLoja());
 
         return produto;
     }
