@@ -8,7 +8,7 @@
 		<version>3.2.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>backend</groupId>
+	<groupId>backend.cohive</groupId>
 	<artifactId>cohive</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>cohive</name>
@@ -112,5 +112,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
