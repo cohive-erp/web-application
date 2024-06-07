@@ -8,7 +8,7 @@
 		<version>3.2.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>backend</groupId>
+	<groupId>backend.cohive</groupId>
 	<artifactId>cohive</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>cohive</name>
@@ -105,7 +105,23 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<version>3.1.1</version>
+				<configuration>
+                <encoding>UTF-8</encoding>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <filtering>true</filtering>
+                        <includes>
+                            <include>**/*.properties</include>
+                        </includes>
+                    </resource>
+                </resources>
+            </configuration>
+			</plugin>
 		</plugins>
 	</build>
-
 </project>
