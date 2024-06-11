@@ -6,8 +6,10 @@ import backend.cohive.Estoque.Entidades.TransacaoEstoque;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class EstoqueProdutoMapper {
 
@@ -60,9 +62,13 @@ public class EstoqueProdutoMapper {
     }
 
     public static List<EstoqueListagemDto> toEstoqueListagemDto(List<Estoque> estoqueProdutos) {
+        if (estoqueProdutos == null || estoqueProdutos.isEmpty()) {
+            return Collections.emptyList();
+        }
+
         return estoqueProdutos.stream()
-                .map(estoque -> toEstoqueListagemDto(estoque))
-                .toList();
+                .map(EstoqueProdutoMapper::toEstoqueListagemDto)
+                .collect(Collectors.toList());
     }
     public static Produto toProduto(ProdutoCriacaoDto produtoCriacaoDto){
 
@@ -122,6 +128,19 @@ public class EstoqueProdutoMapper {
             estoqueNovo.setQuantidade(estoqueAtualizacaoDto.getQuantidade());
 
             return estoqueNovo;
+    }
+
+    public static Produto toProdutoAtualizacaoDto(Produto produto, ProdutoAtualizacaoDto produtoAtualizacaoDto) {
+        if (produto == null || produtoAtualizacaoDto == null) return null;
+
+        produto.setNome(produtoAtualizacaoDto.getNome());
+        produto.setFabricante(produtoAtualizacaoDto.getFabricante());
+        produto.setCategoria(produtoAtualizacaoDto.getCategoria());
+        produto.setPrecoVenda(produtoAtualizacaoDto.getPrecoVenda());
+        produto.setPrecoCompra(produtoAtualizacaoDto.getPrecoCompra());
+        produto.setLoja(produto.getLoja());
+
+        return produto;
     }
 
 }

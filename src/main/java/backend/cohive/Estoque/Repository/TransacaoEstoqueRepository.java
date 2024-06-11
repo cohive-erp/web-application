@@ -10,15 +10,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TransacaoEstoqueRepository extends JpaRepository<TransacaoEstoque, Integer> {
-    @Query("SELECT te FROM TransacaoEstoque te " +
-            "WHERE te.dataSaida >= :startOfMonthSaida AND te.dataSaida <= :endOfMonthSaida")
-    List<TransacaoEstoque> findByDataSaidaBetween(
-            LocalDateTime startOfMonthSaida, LocalDateTime endOfMonthSaida
-    );
-
-    @Query("SELECT te FROM TransacaoEstoque te " +
-            "WHERE te.dataEntradaNova >= :startOfMonthEntrada AND te.dataEntradaNova <= :endOfMonthEntrada")
-    List<TransacaoEstoque> findByDataEntradaNovaBetween(
-            LocalDateTime startOfMonthEntrada, LocalDateTime endOfMonthEntrada
-    );
+    @Query("SELECT t FROM TransacaoEstoque t WHERE (YEAR(t.dataSaida) = :year AND MONTH(t.dataSaida) = :month) OR (YEAR(t.dataEntradaNova) = :year AND MONTH(t.dataEntradaNova) = :month)")
+    List<TransacaoEstoque> findAllByYearAndMonth(@Param("year") int year, @Param("month") int month);
 }

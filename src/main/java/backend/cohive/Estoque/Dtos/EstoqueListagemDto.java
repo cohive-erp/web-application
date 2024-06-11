@@ -2,12 +2,15 @@ package backend.cohive.Estoque.Dtos;
 
 import backend.cohive.Estoque.Entidades.Produto;
 import backend.cohive.Loja.Entidades.Loja;
+import jakarta.persistence.ManyToOne;
 
 import java.time.LocalDateTime;
 
 public class EstoqueListagemDto {
     private LocalDateTime dataEntradaInicial;
+    @ManyToOne
     private Produto produto;
+    @ManyToOne
     private Loja loja;
     private int quantidade;
 

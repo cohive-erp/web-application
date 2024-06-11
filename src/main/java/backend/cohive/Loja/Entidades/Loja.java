@@ -19,6 +19,7 @@ public class Loja {
     @JoinColumn(name = "usuario")
     @ManyToOne
     private Usuario usuario;
+//    private boolean isDeleted;
 
     public Integer getIdLoja() {
         return idLoja;
@@ -91,4 +92,12 @@ public class Loja {
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
+//
+//    public boolean isDeleted() {
+//        return isDeleted;
+//    }
+//
+//    public void setDeleted(boolean deleted) {
+//        isDeleted = deleted;
+//    }
 }

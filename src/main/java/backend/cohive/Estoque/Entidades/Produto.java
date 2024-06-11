@@ -14,19 +14,8 @@ public class Produto {
     private Double precoVenda;
     private Double precoCompra;
     @ManyToOne
-    @JoinColumn(name = "loja")
     private Loja loja;
-
-    public Produto() {}
-
-    public Produto(Integer idProduto, String nome, String fabricante, String categoria, Double precoVenda, Double precoCompra) {
-        this.idProduto = idProduto;
-        this.nome = nome;
-        this.fabricante = fabricante;
-        this.categoria = categoria;
-        this.precoVenda = precoVenda;
-        this.precoCompra = precoCompra;
-    }
+    private boolean isDeleted;
 
     public Integer getIdProduto() {
         return idProduto;
@@ -82,6 +71,14 @@ public class Produto {
 
     public void setLoja(Loja loja) {
         this.loja = loja;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 }
 

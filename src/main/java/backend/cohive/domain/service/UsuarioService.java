@@ -22,6 +22,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
+
 @Service
 public class UsuarioService {
 
@@ -44,6 +46,12 @@ public class UsuarioService {
     private JwtService jwtService;
 
     public Usuario criar(UsuarioCriacaoDto usuarioCriacaoDto) {
+        Optional<Usuario> usuarioExistente = usuarioRepository.findByEmail(usuarioCriacaoDto.getEmail());
+
+        if (usuarioExistente.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email já está em uso");
+        }
+
         final Usuario novoUsuario = UsuarioMapper.of(usuarioCriacaoDto);
 
         String senhaCriptografada = passwordEncoder.encode(novoUsuario.getSenha());
@@ -53,7 +61,6 @@ public class UsuarioService {
     }
 
     public UsuarioTokenDto autenticar(UsuarioLoginDto usuarioLoginDto) {
-
         final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
                 usuarioLoginDto.getEmail(), usuarioLoginDto.getSenha());
 
@@ -64,6 +71,10 @@ public class UsuarioService {
                         .orElseThrow(
                                 () -> new ResponseStatusException(404, "Email do usuário não cadastrado", null)
                         );
+
+        if (usuarioAutenticado.isDeleted()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Usuário deletado");
+        }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -90,6 +101,13 @@ public class UsuarioService {
         // Adicione outras atualizações necessárias
 
         return usuarioRepository.save(usuario);
+    }
+
+    public void setUserAsDeleted(Integer id) throws ChangeSetPersister.NotFoundException {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+        usuario.setDeleted(true);
+        usuarioRepository.save(usuario);
     }
 
 
