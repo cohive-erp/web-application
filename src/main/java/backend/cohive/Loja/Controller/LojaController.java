@@ -11,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/lojas")
@@ -54,15 +56,18 @@ public class LojaController {
         return ResponseEntity.ok(lojaConsultaDto);
     }
 
-    @DeleteMapping("/{id}")
-    ResponseEntity<Void> deletarLoja(@PathVariable int id) {
-        Optional<Loja> optionalLoja = lojaRepository.findById(id);
-        if (!optionalLoja.isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        lojaRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
+//    @PutMapping("/deletar/{id}")
+//    ResponseEntity<Void> deletarLoja(@PathVariable int id) {
+//        Optional<Loja> optionalLoja = lojaRepository.findById(id);
+//        if (!optionalLoja.isPresent()) {
+//            return ResponseEntity.notFound().build();
+//        }
+//        Loja loja = optionalLoja.get();
+//        loja.setDeleted(true);
+//        lojaRepository.save(loja);
+//
+//        return ResponseEntity.noContent().build();
+//    }
 
     // Este método será adicionado para procurar uma loja pelo CEP usando pesquisa binária
     @GetMapping("/porCEP")
@@ -103,4 +108,24 @@ public class LojaController {
         return null; // Loja não encontrada
     }
 
+    @GetMapping("/matrizNumero")
+    public ResponseEntity<int[][]> getMatrizNumero() {
+        // Obter todas as lojas do banco de dados
+        List<Loja> lojas = lojaRepository.findAll();
+
+        // Determinar o tamanho da matriz, com base no número de lojas e um número fixo de colunas, por exemplo, 3 colunas
+        int colunas = 3; // Número fixo de colunas
+        int linhas = (lojas.size() + colunas - 1) / colunas; // Calcula o número de linhas necessário
+        int[][] matriz = new int[linhas][colunas];
+
+        // Preencher a matriz com os números das lojas
+        for (int i = 0; i < lojas.size(); i++) {
+            int linha = i / colunas;
+            int coluna = i % colunas;
+            matriz[linha][coluna] = lojas.get(i).getNumero(); // Supondo que getNumero() retorna um valor numérico
+        }
+
+        // Retornar a resposta HTTP com a matriz de números
+        return ResponseEntity.ok(matriz);
+    }
 }

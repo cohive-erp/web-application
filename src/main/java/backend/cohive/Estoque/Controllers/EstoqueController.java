@@ -63,6 +63,30 @@ public class EstoqueController {
         return ResponseEntity.status(404).build();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ProdutoListagemDto> procurarProdutoPorId(@PathVariable Integer id){
+        Optional<Produto> produto = produtoRepository.findById(id);
+        if (!produto.isPresent()){
+            return ResponseEntity.notFound().build();
+        }
+        ProdutoListagemDto produtoListagemDto = EstoqueProdutoMapper.toProdutoListagemDto(produto.get());
+        return ResponseEntity.ok(produtoListagemDto);
+    }
+
+    @PutMapping("/atualizar-produto/{id}")
+    public ResponseEntity<ProdutoListagemDto> atualizarProduto(@PathVariable Integer id, @RequestBody ProdutoAtualizacaoDto produtoAtualizacaoDto){
+        Optional<Produto> produtoOpt = produtoRepository.findById(id);
+
+        if (produtoOpt.isPresent()){
+            Produto produto = produtoOpt.get();
+            Produto produtoAtualizado =  EstoqueProdutoMapper.toProdutoAtualizacaoDto(produto, produtoAtualizacaoDto);
+            Produto produtoSalvo = produtoRepository.save(produtoAtualizado);
+            ProdutoListagemDto produtoListagemDto = EstoqueProdutoMapper.toProdutoListagemDto(produtoSalvo);
+            return ResponseEntity.ok(produtoListagemDto);
+        }
+        return ResponseEntity.status(404).build();
+    }
+
     @PutMapping("/baixa-estoque")
     public ResponseEntity<EstoqueListagemDto> darBaixaProduto(@RequestBody @Valid EstoqueAtualizacaoDto estoqueAtualizacaoDto){
         Optional<Estoque> estoqueOpt = estoqueRepository.findByDataEntradaInicial(estoqueAtualizacaoDto.getDataEntradaInicial());
@@ -72,7 +96,7 @@ public class EstoqueController {
             Estoque estoqueBaixa = EstoqueProdutoMapper.saidaAtualizacaoDto(estoqueAtualizacaoDto);
             estoqueBaixa.setQuantidade(estoqueOpt.get().getQuantidade() - estoqueAtualizacaoDto.getQuantidade());
 
-            if (estoqueBaixa == null) return ResponseEntity.status(404).build();
+            if (estoqueBaixa == null)  return ResponseEntity.status(404).build();
 
             TransacaoEstoque transacaoEstoque = EstoqueProdutoMapper.toTransacaoEstoqueSaida(estoqueBaixa, estoqueOpt);
 
@@ -123,6 +147,7 @@ public class EstoqueController {
 
         return ResponseEntity.ok(estoqueListagemDtos);
     }
+
 
     // Método recursivo para encontrar um produto no estoque pelo nome
     @GetMapping("/buscarPorNome/{nome}")
@@ -190,6 +215,20 @@ public class EstoqueController {
         // Retornar a lista ordenada de EstoqueListagemDto
         return ResponseEntity.status(200).body(produtoListagemDtoListaObj.getElementos());
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> deletaProduto(@PathVariable Integer id) {
+        Optional<Produto> optionalProduto = produtoRepository.findById(id);
+        if (!optionalProduto.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        Produto produto = optionalProduto.get();
+        produto.setDeleted(true);
+        produtoRepository.save(produto);
+
+        return ResponseEntity.noContent().build();
+    }
+
 
 //    public ResponseEntity<EstoqueListagemDto> listarProdutosObj(){
 //        Long<Estoque> esqt = estoqueRepository.count();

@@ -2,9 +2,12 @@ package backend.cohive.Estoque.Dtos;
 
 import backend.cohive.Loja.Entidades.Loja;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
-public class ProdutoCriacaoDto {
+public class ProdutoAtualizacaoDto {
     @NotBlank
     @Size(min = 3, max = 100)
     private String nome;

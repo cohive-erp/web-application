@@ -21,6 +21,7 @@ public class Usuario {
     private String numeroCelular;
     private String email;
     private String senha;
+    private boolean isDeleted;
 
     public Usuario(){}
 
@@ -70,5 +71,13 @@ public class Usuario {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 }

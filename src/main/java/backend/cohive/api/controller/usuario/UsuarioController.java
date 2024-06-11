@@ -1,5 +1,7 @@
 package backend.cohive.api.controller.usuario;
 
+import backend.cohive.FilaObj;
+import backend.cohive.Loja.Entidades.Loja;
 import backend.cohive.domain.service.UsuarioService;
 import backend.cohive.domain.service.usuario.Usuario;
 import backend.cohive.domain.service.usuario.autenticacao.dto.UsuarioLoginDto;
@@ -16,6 +18,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
@@ -23,7 +29,7 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @PostMapping("/cadastro")
-    public ResponseEntity<UsuarioListagemDto> criar(@RequestBody @Valid UsuarioCriacaoDto usuarioCriacaoDto){
+    public ResponseEntity<UsuarioListagemDto> criar(@RequestBody @Valid UsuarioCriacaoDto usuarioCriacaoDto) {
         Usuario usuarioCriado = this.usuarioService.criar(usuarioCriacaoDto);
         UsuarioListagemDto usuarioListagemDto = UsuarioMapper.toUsuarioListagemDto(usuarioCriado);
 
@@ -31,7 +37,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UsuarioTokenDto> login(@RequestBody UsuarioLoginDto usuarioLoginDTO){
+    public ResponseEntity<UsuarioTokenDto> login(@RequestBody UsuarioLoginDto usuarioLoginDTO) {
         UsuarioTokenDto usuarioTokenDto = this.usuarioService.autenticar(usuarioLoginDTO);
 
         return ResponseEntity.status(200).body(usuarioTokenDto);
@@ -72,4 +78,54 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token inválido ou expirado.");
         }
     }
+
+    private FilaObj<Usuario> filaDeSuporte = new FilaObj<>(10);
+
+    @PostMapping("/fila-suporte")
+    public ResponseEntity<String> adicionarUsuarioFilaSuporte(@RequestParam Integer usuarioId) throws ChangeSetPersister.NotFoundException {
+        Usuario usuario = usuarioService.findById(usuarioId);
+        if (usuario != null) {
+            if (filaDeSuporte.isFull()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Fila de suporte cheia");
+            }
+            filaDeSuporte.insert(usuario);
+            return ResponseEntity.ok("Usuário adicionado à fila de suporte");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/fila-suporte/proximo")
+    public ResponseEntity<UsuarioListagemDto> obterProximoUsuarioFilaSuporte() {
+        Usuario usuario = filaDeSuporte.poll();
+        if (usuario != null) {
+            UsuarioListagemDto usuarioListagemDto = UsuarioMapper.toUsuarioListagemDto(usuario);
+            return ResponseEntity.ok(usuarioListagemDto);
+        } else {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+    }
+
+    @GetMapping("/fila-suporte")
+    public ResponseEntity<List<UsuarioListagemDto>> visualizarFilaSuporte() {
+        List<UsuarioListagemDto> usuariosNaFila = new ArrayList<>();
+        for (int i = 0; i < filaDeSuporte.getTamanho(); i++) {
+            Usuario usuario = filaDeSuporte.peek();
+            usuariosNaFila.add(UsuarioMapper.toUsuarioListagemDto(usuario));
+            filaDeSuporte.insert(filaDeSuporte.poll()); // Reinsere o usuário para manter a ordem
+        }
+        return ResponseEntity.ok(usuariosNaFila);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUsuario(@PathVariable Integer id) {
+        try {
+            usuarioService.setUserAsDeleted(id);
+            return ResponseEntity.noContent().build();
+        } catch (ChangeSetPersister.NotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }
+

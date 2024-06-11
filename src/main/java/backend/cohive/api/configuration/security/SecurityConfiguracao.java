@@ -56,6 +56,7 @@ public class SecurityConfiguracao {
             new AntPathRequestMatcher("/usuarios/request-password-reset"),
             new AntPathRequestMatcher("/usuarios/validate-token"),
             new AntPathRequestMatcher("/usuarios/reset-password"),
+            new AntPathRequestMatcher("/relatorios/get-relatorio-csv"),
             new AntPathRequestMatcher("/h2-console/**"),
             new AntPathRequestMatcher("/h2-console/**/**"),
             new AntPathRequestMatcher("/error/**")

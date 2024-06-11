@@ -10,10 +10,8 @@ public class Estoque {
     @Id
     private LocalDateTime dataEntradaInicial;
     @ManyToOne
-    @JoinColumn(name = "id")
     private Produto produto;
     @ManyToOne
-    @JoinColumn(name = "loja")
     private Loja loja;
     private Integer quantidade;
 
