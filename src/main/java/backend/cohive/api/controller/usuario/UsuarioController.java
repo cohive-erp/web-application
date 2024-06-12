@@ -79,7 +79,7 @@ public class UsuarioController {
         }
     }
 
-    private FilaObj<Usuario> filaDeSuporte = new FilaObj<>(10);
+    FilaObj<Usuario> filaDeSuporte = new FilaObj<>(10);
 
     @PostMapping("/fila-suporte")
     public ResponseEntity<String> adicionarUsuarioFilaSuporte(@RequestParam Integer usuarioId) throws ChangeSetPersister.NotFoundException {
