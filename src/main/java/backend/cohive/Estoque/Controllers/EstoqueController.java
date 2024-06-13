@@ -11,13 +11,20 @@ import backend.cohive.FilaObj;
 import backend.cohive.ListaObj;
 import backend.cohive.Loja.Entidades.Loja;
 import backend.cohive.Loja.Repository.LojaRepository;
+import backend.cohive.Observer.Alerta.Entity.Alerta;
+import backend.cohive.Observer.Alerta.Repository.AlertaRepository;
+import backend.cohive.Observer.EmailNotifier;
+import backend.cohive.domain.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -31,6 +38,12 @@ public class EstoqueController {
     private LojaRepository lojaRepository;
     @Autowired
     private TransacaoEstoqueRepository transacaoEstoqueRepository;
+    @Autowired
+    private AlertaRepository alertaRepository;
+    @Autowired
+    private EmailNotifier emailNotifier;
+    @Autowired
+    private UsuarioService usuarioService;
 
     // Endpoint para adicionar um novo produto ao estoque
     @PostMapping
@@ -227,6 +240,32 @@ public class EstoqueController {
         produtoRepository.save(produto);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/checar-quantidade-dos-produtos/{id}")
+    public ResponseEntity<Map<String, Object>> checkAllProductQuantities(@PathVariable Integer id) throws ChangeSetPersister.NotFoundException {
+        List<Estoque> allStock = estoqueRepository.findAll();
+        Map<String, Integer> productQuantities = new HashMap<>();
+        Alerta alertaCriado = null;
+        for (Estoque stock : allStock) {
+            String productName = stock.getProduto().getNome();
+            Integer quantity = stock.getQuantidade();
+            productQuantities.put(productName, quantity);
+            if (quantity == 3) {
+                Alerta alerta = new Alerta();
+                alerta.setTipo("Quantidade");
+                alerta.setData(LocalDateTime.now());
+                alerta.setMensagem("A quantidade do produto: " + productName + " está em 3.");
+                alerta.setEstoque(stock);
+                alertaCriado = alertaRepository.save(alerta);
+                String email = usuarioService.findById(id).getEmail();
+                emailNotifier.notify(alerta.getMensagem(), productName, email);
+            }
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("quantities", productQuantities);
+        response.put("alert", alertaCriado);
+        return ResponseEntity.ok(response);
     }
 
 
