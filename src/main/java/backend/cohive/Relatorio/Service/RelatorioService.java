@@ -1,5 +1,7 @@
 package backend.cohive.Relatorio.Service;
 
+import backend.cohive.Estoque.Dtos.ProdutoVendidoDto;
+import backend.cohive.Estoque.Entidades.Produto;
 import backend.cohive.Estoque.Entidades.TransacaoEstoque;
 import backend.cohive.Estoque.Repository.TransacaoEstoqueRepository;
 import backend.cohive.Relatorio.Entidades.RelatorioEntidade;
@@ -8,6 +10,9 @@ import backend.cohive.Relatorio.Repository.RelatorioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.net.MalformedURLException;
@@ -16,6 +21,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 @Service
@@ -78,5 +84,17 @@ public class RelatorioService {
         } else {
             throw new RuntimeException("Não foi possível ler o arquivo " + nomeArquivo);
         }
+    }
+
+    public ProdutoVendidoDto findMostSoldProduct() {
+        Pageable topOne = PageRequest.of(0, 1);
+        Page<Object[]> result = transacaoEstoqueRepository.findMostSoldProduct(topOne);
+        if (!result.isEmpty()) {
+            Object[] mostSoldProductData = result.getContent().get(0);
+            Produto produto = (Produto) mostSoldProductData[0];
+            Integer quantidadeVendida = ((Long) mostSoldProductData[1]).intValue();
+            return new ProdutoVendidoDto(produto, quantidadeVendida);
+        }
+        return null;
     }
 }
