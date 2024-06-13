@@ -7,6 +7,7 @@ import jakarta.validation.constraints.*;
 public class ProdutoCriacaoDto {
     @NotBlank
     @Size(min = 3, max = 100)
+    @NotNull
     private String nome;
 
     @NotBlank
@@ -24,6 +25,9 @@ public class ProdutoCriacaoDto {
     @NotNull
     @Positive
     private double precoCompra;
+    @NotBlank
+    @Size(min = 3, max = 200)
+    private String descricao;
     @Positive
     @NotNull
     private int quantidade;
@@ -68,6 +72,14 @@ public class ProdutoCriacaoDto {
 
     public void setPrecoCompra(double precoCompra) {
         this.precoCompra = precoCompra;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     public int getQuantidade() {

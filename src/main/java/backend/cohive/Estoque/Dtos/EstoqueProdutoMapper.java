@@ -21,6 +21,7 @@ public class EstoqueProdutoMapper {
         produtoListagemDto.setNome(produto.getNome());
         produtoListagemDto.setFabricante(produto.getFabricante());
         produtoListagemDto.setCategoria(produto.getCategoria());
+        produtoListagemDto.setDescricao(produto.getDescricao());
         produtoListagemDto.setPrecoVenda(produto.getPrecoVenda());
         produtoListagemDto.setPrecoCompra(produto.getPrecoCompra());
         produtoListagemDto.setLoja(produto.getLoja());
@@ -36,6 +37,7 @@ public class EstoqueProdutoMapper {
         produtoListagemDto.setNome((estoque.getProduto().getNome()));
         produtoListagemDto.setFabricante((estoque.getProduto().getFabricante()));
         produtoListagemDto.setCategoria((estoque.getProduto().getCategoria()));
+        produtoListagemDto.setDescricao((estoque.getProduto().getDescricao()));
         produtoListagemDto.setPrecoVenda((estoque.getProduto().getPrecoVenda()));
         produtoListagemDto.setPrecoCompra((estoque.getProduto().getPrecoCompra()));
         produtoListagemDto.setLoja(estoque.getLoja());
@@ -79,6 +81,7 @@ public class EstoqueProdutoMapper {
         produto.setNome(produtoCriacaoDto.getNome());
         produto.setFabricante(produtoCriacaoDto.getFabricante());
         produto.setCategoria(produtoCriacaoDto.getCategoria());
+        produto.setDescricao(produtoCriacaoDto.getDescricao());
         produto.setPrecoVenda(produtoCriacaoDto.getPrecoVenda());
         produto.setPrecoCompra(produtoCriacaoDto.getPrecoCompra());
         produto.setLoja(produtoCriacaoDto.getLoja());
@@ -136,6 +139,7 @@ public class EstoqueProdutoMapper {
         produto.setNome(produtoAtualizacaoDto.getNome());
         produto.setFabricante(produtoAtualizacaoDto.getFabricante());
         produto.setCategoria(produtoAtualizacaoDto.getCategoria());
+        produto.setDescricao(produtoAtualizacaoDto.getDescricao());
         produto.setPrecoVenda(produtoAtualizacaoDto.getPrecoVenda());
         produto.setPrecoCompra(produtoAtualizacaoDto.getPrecoCompra());
         produto.setLoja(produto.getLoja());

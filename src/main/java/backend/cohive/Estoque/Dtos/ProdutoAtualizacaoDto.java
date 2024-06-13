@@ -20,6 +20,10 @@ public class ProdutoAtualizacaoDto {
     @Size(min = 2, max = 50)
     private String categoria;
 
+    @NotBlank
+    @Size(min = 3, max = 200)
+    private String descricao;
+
     @NotNull
     @Positive
     private double precoVenda;
@@ -55,6 +59,14 @@ public class ProdutoAtualizacaoDto {
 
     public void setCategoria(String categoria) {
         this.categoria = categoria;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     public double getPrecoVenda() {

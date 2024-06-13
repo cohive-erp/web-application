@@ -8,6 +8,7 @@ public class ProdutoListagemDto {
     private String nome;
     private String fabricante;
     private String categoria;
+    private String descricao;
     private double precoVenda;
     private double precoCompra;
     private Loja loja;
@@ -42,6 +43,14 @@ public class ProdutoListagemDto {
 
     public void setCategoria(String categoria) {
         this.categoria = categoria;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     public double getPrecoVenda() {
