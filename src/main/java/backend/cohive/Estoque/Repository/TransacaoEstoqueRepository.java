@@ -19,4 +19,8 @@ public interface TransacaoEstoqueRepository extends JpaRepository<TransacaoEstoq
 
     @Query("SELECT t.estoque.produto, SUM(t.quantidadeAntesTransacao) as total FROM TransacaoEstoque t GROUP BY t.estoque.produto ORDER BY total DESC")
     Page<Object[]> findMostSoldProduct(Pageable pageable);
+
+    @Query("SELECT t FROM TransacaoEstoque t WHERE (t.dataSaida BETWEEN :startDate AND :endDate) AND t.tipoTransacao = 'SAIDA'")
+    List<TransacaoEstoque> findAllByDateRange(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+
 }

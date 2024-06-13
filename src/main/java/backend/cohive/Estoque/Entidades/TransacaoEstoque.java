@@ -15,6 +15,7 @@ public class TransacaoEstoque {
     private LocalDateTime dataSaida;
     private LocalDateTime dataEntradaNova;
     private Integer quantidadeAntesTransacao;
+    private String tipoTransacao; // Adicionado para representar o tipo de transação
 
     public Integer getIdTransacaoEstoque() {
         return idTransacaoEstoque;
@@ -54,5 +55,13 @@ public class TransacaoEstoque {
 
     public void setQuantidadeAntesTransacao(Integer quantidadeAntesTransacao) {
         this.quantidadeAntesTransacao = quantidadeAntesTransacao;
+    }
+
+    public String getTipoTransacao() {
+        return tipoTransacao;
+    }
+
+    public void setTipoTransacao(String tipoTransacao) {
+        this.tipoTransacao = tipoTransacao;
     }
 }

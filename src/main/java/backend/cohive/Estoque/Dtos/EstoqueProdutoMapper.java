@@ -109,6 +109,7 @@ public class EstoqueProdutoMapper {
         transacaoEstoque.setDataSaida(LocalDateTime.now());
         transacaoEstoque.setQuantidadeAntesTransacao(estoqueOpt.get().getQuantidade());
         transacaoEstoque.setEstoque(estoque);
+        transacaoEstoque.setTipoTransacao("SAIDA");
 
         return transacaoEstoque;
     }
@@ -120,6 +121,7 @@ public class EstoqueProdutoMapper {
         transacaoEstoque.setDataEntradaNova(LocalDateTime.now());
         transacaoEstoque.setQuantidadeAntesTransacao(estoqueOpt.get().getQuantidade());
         transacaoEstoque.setEstoque(estoque);
+        transacaoEstoque.setTipoTransacao("ENTRADA");
 
         return transacaoEstoque;
     }
