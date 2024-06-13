@@ -1,4 +1,4 @@
-package backend.cohive.Relatorio.Observer;
+package backend.cohive.Relatorio.Strategy;
 
 import backend.cohive.Estoque.Entidades.TransacaoEstoque;
 

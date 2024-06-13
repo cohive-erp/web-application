@@ -1,11 +1,7 @@
-package backend.cohive.Relatorio.Observer;
+package backend.cohive.Relatorio.Strategy;
 
 import backend.cohive.Estoque.Entidades.TransacaoEstoque;
-import backend.cohive.ListaObj;
-import jakarta.persistence.*;
-import org.yaml.snakeyaml.nodes.CollectionNode;
 
-import java.util.Date;
 import java.util.List;
 
 public interface Relatorio {
