@@ -93,4 +93,10 @@ public class RelatorioController {
         return ResponseEntity.ok(dailyInvoice);
     }
 
+    @GetMapping("/valor-vendas-ultimos-sete-dias")
+    public ResponseEntity<BigDecimal> getSalesValueLastSevenDays() {
+        BigDecimal salesValue = relatorioService.getSalesValueLastSevenDays();
+        return ResponseEntity.ok(salesValue);
+    }
+
 }

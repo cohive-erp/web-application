@@ -126,4 +126,14 @@ public class RelatorioService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         return dailyInvoice;
     }
+
+    public BigDecimal getSalesValueLastSevenDays() {
+        LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7).withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime now = LocalDateTime.now();
+        List<TransacaoEstoque> transactions = transacaoEstoqueRepository.findAllByDateRange(sevenDaysAgo, now);
+        return transactions.stream()
+                .filter(t -> t.getTipoTransacao().equals("SAIDA"))
+                .map(t -> BigDecimal.valueOf(t.getEstoque().getProduto().getPrecoVenda()))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }
