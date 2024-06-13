@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 @RestController
 @RequestMapping("/relatorios")
@@ -78,6 +79,18 @@ public class RelatorioController {
             return ResponseEntity.ok(produtoVendido);
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/faturas-mensais")
+    public ResponseEntity<List<BigDecimal>> getMonthlyInvoicesForLastSixMonths() {
+        List<BigDecimal> monthlyInvoices = relatorioService.generateMonthlyInvoicesForLastSixMonths();
+        return ResponseEntity.ok(monthlyInvoices);
+    }
+
+    @GetMapping("/fatura-diaria")
+    public ResponseEntity<BigDecimal> getDailyInvoice() {
+        BigDecimal dailyInvoice = relatorioService.generateDailyInvoice();
+        return ResponseEntity.ok(dailyInvoice);
     }
 
 }

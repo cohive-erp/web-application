@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -96,5 +97,33 @@ public class RelatorioService {
             return new ProdutoVendidoDto(produto, quantidadeVendida);
         }
         return null;
+    }
+
+    public List<BigDecimal> generateMonthlyInvoicesForLastSixMonths() {
+        List<BigDecimal> monthlyInvoices = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {
+            LocalDateTime startDate = LocalDateTime.now().minusMonths(i).withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
+            LocalDateTime endDate = startDate.plusMonths(1).minusSeconds(1);
+            List<TransacaoEstoque> transactions = transacaoEstoqueRepository.findAllByDateRange(startDate, endDate);
+            System.out.println(transactions); // Imprime a lista de transações
+            BigDecimal monthlyInvoice = transactions.stream()
+                    .filter(t -> t.getTipoTransacao().equals("SAIDA"))
+                    .map(t -> BigDecimal.valueOf(t.getEstoque().getProduto().getPrecoVenda()))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            monthlyInvoices.add(monthlyInvoice);
+        }
+        return monthlyInvoices;
+    }
+
+    public BigDecimal generateDailyInvoice() {
+        LocalDateTime startOfDay = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime endOfDay = startOfDay.plusDays(1).minusSeconds(1);
+        List<TransacaoEstoque> transactions = transacaoEstoqueRepository.findAllByDateRange(startOfDay, endOfDay);
+        System.out.println(transactions); // Imprime a lista de transações
+        BigDecimal dailyInvoice = transactions.stream()
+                .filter(t -> t.getTipoTransacao().equals("SAIDA"))
+                .map(t -> BigDecimal.valueOf(t.getEstoque().getProduto().getPrecoVenda()))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return dailyInvoice;
     }
 }
