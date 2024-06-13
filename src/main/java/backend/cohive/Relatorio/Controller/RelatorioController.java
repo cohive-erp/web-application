@@ -1,5 +1,7 @@
 package backend.cohive.Relatorio.Controller;
 
+import backend.cohive.Estoque.Dtos.ProdutoVendidoDto;
+import backend.cohive.Estoque.Entidades.Produto;
 import backend.cohive.Estoque.Entidades.TransacaoEstoque;
 import backend.cohive.Estoque.Repository.TransacaoEstoqueRepository;
 import backend.cohive.Relatorio.Dtos.RelatorioMapper;
@@ -68,4 +70,14 @@ public class RelatorioController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao gerar relatório mensal: " + e.getMessage());
         }
     }
+
+    @GetMapping("/produto-mais-vendido")
+    public ResponseEntity<ProdutoVendidoDto> getMostSoldProduct() {
+        ProdutoVendidoDto produtoVendido = relatorioService.findMostSoldProduct();
+        if (produtoVendido != null) {
+            return ResponseEntity.ok(produtoVendido);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
 }
