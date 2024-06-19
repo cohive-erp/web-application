@@ -127,13 +127,33 @@ public class RelatorioService {
         return dailyInvoice;
     }
 
-    public BigDecimal getSalesValueLastSevenDays() {
-        LocalDateTime sevenDaysAgo = LocalDateTime.now().minusDays(7).withHour(0).withMinute(0).withSecond(0).withNano(0);
-        LocalDateTime now = LocalDateTime.now();
-        List<TransacaoEstoque> transactions = transacaoEstoqueRepository.findAllByDateRange(sevenDaysAgo, now);
-        return transactions.stream()
-                .filter(t -> t.getTipoTransacao().equals("SAIDA"))
-                .map(t -> BigDecimal.valueOf(t.getEstoque().getProduto().getPrecoVenda()))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    public List<Object[]> getSalesForLastSevenDays() {
+        LocalDateTime startOfToday = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime endOfToday = startOfToday.plusDays(7).minusSeconds(1);
+        LocalDateTime startOfLastWeek = startOfToday.minusDays(7);
+        List<Object[]> sales
+                = transacaoEstoqueRepository.findSalesForLastSevenDays(startOfLastWeek, endOfToday);
+        return sales;
+    }
+
+    public List<Object[]> getMonthlySoldProducts() {
+        List<Object[]> monthlySoldProducts = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {
+            LocalDateTime startDate = LocalDateTime.now().minusMonths(i).withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
+            LocalDateTime endDate = startDate.plusMonths(1).minusSeconds(1);
+            List<TransacaoEstoque> transactions = transacaoEstoqueRepository.findAllByDateRange(startDate, endDate);
+
+            Object[] monthlySoldProduct = new Object[2];
+            monthlySoldProduct[0] = transactions.stream()
+                    .map(t -> t.getEstoque().getProduto())
+                    .distinct()
+                    .count();
+            monthlySoldProduct[1] = transactions.stream()
+                    .filter(t -> t.getTipoTransacao().equals("SAIDA"))
+                    .mapToInt(t -> t.getQuantidadeAntesTransacao())
+                    .sum();
+            monthlySoldProducts.add(monthlySoldProduct);
+        }
+        return monthlySoldProducts;
     }
 }

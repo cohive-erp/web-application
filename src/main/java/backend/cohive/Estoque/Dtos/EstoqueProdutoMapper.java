@@ -144,6 +144,7 @@ public class EstoqueProdutoMapper {
         produto.setDescricao(produtoAtualizacaoDto.getDescricao());
         produto.setPrecoVenda(produtoAtualizacaoDto.getPrecoVenda());
         produto.setPrecoCompra(produtoAtualizacaoDto.getPrecoCompra());
+        produto.setQuantidade(produtoAtualizacaoDto.getQuantidade());
         produto.setLoja(produto.getLoja());
 
         return produto;

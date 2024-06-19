@@ -87,16 +87,23 @@ public class RelatorioController {
         return ResponseEntity.ok(monthlyInvoices);
     }
 
+    @GetMapping("/produtos-vendidos-mensal")
+    public ResponseEntity<List<Object[]>> getMonthlySoldProducts() {
+        List<Object[]> monthlySoldProducts = relatorioService.getMonthlySoldProducts();
+        return ResponseEntity.ok(monthlySoldProducts);
+    }
+
     @GetMapping("/fatura-diaria")
     public ResponseEntity<BigDecimal> getDailyInvoice() {
         BigDecimal dailyInvoice = relatorioService.generateDailyInvoice();
         return ResponseEntity.ok(dailyInvoice);
     }
 
+
     @GetMapping("/valor-vendas-ultimos-sete-dias")
-    public ResponseEntity<BigDecimal> getSalesValueLastSevenDays() {
-        BigDecimal salesValue = relatorioService.getSalesValueLastSevenDays();
-        return ResponseEntity.ok(salesValue);
+    public ResponseEntity<List<Object[]>> getWeeklySales() {
+        List<Object[]> weeklySales = relatorioService.getSalesForLastSevenDays();
+        return ResponseEntity.ok(weeklySales);
     }
 
 }

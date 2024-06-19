@@ -14,6 +14,7 @@ public class Produto {
     private String descricao;
     private Double precoVenda;
     private Double precoCompra;
+    private Integer quantidade;
     @ManyToOne
     private Loja loja;
     private boolean isDeleted;
@@ -88,6 +89,14 @@ public class Produto {
 
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public Integer getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
     }
 }
 

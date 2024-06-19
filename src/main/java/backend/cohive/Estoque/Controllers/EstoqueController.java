@@ -105,7 +105,6 @@ public class EstoqueController {
         Optional<Estoque> estoqueOpt = estoqueRepository.findByDataEntradaInicial(estoqueAtualizacaoDto.getDataEntradaInicial());
 
         if (estoqueOpt.isPresent()){
-
             Estoque estoqueBaixa = EstoqueProdutoMapper.saidaAtualizacaoDto(estoqueAtualizacaoDto);
             estoqueBaixa.setQuantidade(estoqueOpt.get().getQuantidade() - estoqueAtualizacaoDto.getQuantidade());
 
@@ -232,11 +231,15 @@ public class EstoqueController {
     @PutMapping("/{id}")
     public ResponseEntity<Void> deletaProduto(@PathVariable Integer id) {
         Optional<Produto> optionalProduto = produtoRepository.findById(id);
+
         if (!optionalProduto.isPresent()) {
             return ResponseEntity.notFound().build();
         }
+
         Produto produto = optionalProduto.get();
         produto.setDeleted(true);
+        produto.setQuantidade(0);
+
         produtoRepository.save(produto);
 
         return ResponseEntity.noContent().build();

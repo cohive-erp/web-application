@@ -23,4 +23,6 @@ public interface TransacaoEstoqueRepository extends JpaRepository<TransacaoEstoq
     @Query("SELECT t FROM TransacaoEstoque t WHERE (t.dataSaida BETWEEN :startDate AND :endDate) AND t.tipoTransacao = 'SAIDA'")
     List<TransacaoEstoque> findAllByDateRange(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
+    @Query("SELECT t.dataSaida, SUM(t.quantidadeAntesTransacao) FROM TransacaoEstoque t WHERE (t.dataSaida BETWEEN :startDate AND :endDate) GROUP BY t.dataSaida")
+    List<Object[]> findSalesForLastSevenDays(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 }
