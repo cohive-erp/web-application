@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/estoque")
+@RequestMapping("/api/estoque")
 public class EstoqueController {
     @Autowired
     private ProdutoRepository produtoRepository;
@@ -159,7 +159,6 @@ public class EstoqueController {
 
         return ResponseEntity.ok(estoqueListagemDtos);
     }
-
 
     // Método recursivo para encontrar um produto no estoque pelo nome
     @GetMapping("/buscarPorNome/{nome}")
