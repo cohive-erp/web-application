@@ -15,5 +15,4 @@ public interface EstoqueRepository extends JpaRepository<Estoque, LocalDate> {
 
     @Query("SELECT e FROM Estoque e")
     List<Estoque> findAllEstoque();
-
 }

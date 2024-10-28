@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 
 public class EstoqueAtualizacaoDto {
     @NotNull
-    @PastOrPresent
     private LocalDateTime dataEntradaInicial;
     @NotNull
     private Produto produto;

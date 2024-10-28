@@ -36,6 +36,17 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioListagemDto);
     }
 
+    @GetMapping("/get-user/{id}")
+    public ResponseEntity<UsuarioListagemDto> obterUsuario(@PathVariable Integer id) throws ChangeSetPersister.NotFoundException {
+        Optional<Usuario> usuario = Optional.ofNullable(usuarioService.findById(id));
+        if (usuario.isPresent()) {
+            UsuarioListagemDto usuarioListagemDto = UsuarioMapper.toUsuarioListagemDto(usuario.get());
+            return ResponseEntity.ok(usuarioListagemDto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PostMapping("/login")
     public ResponseEntity<UsuarioTokenDto> login(@RequestBody UsuarioLoginDto usuarioLoginDTO) {
         UsuarioTokenDto usuarioTokenDto = this.usuarioService.autenticar(usuarioLoginDTO);
