@@ -52,6 +52,8 @@ public class SecurityConfiguracao {
             new AntPathRequestMatcher("/v3/api-docs/**"),
             new AntPathRequestMatcher("/api/actuator/*"),
             new AntPathRequestMatcher("/api/usuarios/cadastro"),
+            new AntPathRequestMatcher("/api/lojas"),
+            new AntPathRequestMatcher("/api/usuarios/get-user"),
             new AntPathRequestMatcher("/api/usuarios/login/**"),
             new AntPathRequestMatcher("/api/usuarios/request-password-reset"),
             new AntPathRequestMatcher("/api/usuarios/validate-token"),

@@ -145,6 +145,19 @@ public class EstoqueController {
         }
         return ResponseEntity.status(404).build();
     }
+//
+//    @GetMapping("{idLoja}")
+//    public ResponseEntity<List<EstoqueListagemDto>> listarEstoqueLoja(@PathVariable Integer idLoja){
+//
+//        List<Estoque> estoque = estoqueRepository.findAllByidLoja(idLoja);
+//        if (estoque.isEmpty()){
+//            return ResponseEntity.noContent().build();
+//        }
+//
+//        List<EstoqueListagemDto> estoqueListagemDtos = EstoqueProdutoMapper.toEstoqueListagemDto(estoque);
+//
+//        return ResponseEntity.ok(estoqueListagemDtos);
+//    }
 
 
     @GetMapping
