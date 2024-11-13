@@ -1,3 +1,5 @@
+
+
 //package backend.cohive.Estoque.Controllers;
 //
 //import backend.cohive.Estoque.Entidades.Estoque;
@@ -295,3 +297,4 @@
 ////        return ResponseEntity.status(200).body(estoque);
 ////    }
 //}
+
