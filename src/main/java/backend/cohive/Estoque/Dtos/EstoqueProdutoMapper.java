@@ -68,10 +68,12 @@ public class EstoqueProdutoMapper {
             return Collections.emptyList();
         }
 
+        System.out.println("Mapeando " + estoqueProdutos.size() + " produtos para DTOs.");
         return estoqueProdutos.stream()
                 .map(EstoqueProdutoMapper::toEstoqueListagemDto)
                 .collect(Collectors.toList());
     }
+
     public static Produto toProduto(ProdutoCriacaoDto produtoCriacaoDto){
 
         if (produtoCriacaoDto == null) return null;

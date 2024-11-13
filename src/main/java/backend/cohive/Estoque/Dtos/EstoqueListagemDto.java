@@ -8,9 +8,7 @@ import java.time.LocalDateTime;
 
 public class EstoqueListagemDto {
     private LocalDateTime dataEntradaInicial;
-    @ManyToOne
     private Produto produto;
-    @ManyToOne
     private Loja loja;
     private int quantidade;
 

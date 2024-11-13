@@ -3,7 +3,6 @@ package backend.cohive.Estoque.Dtos;
 import backend.cohive.Loja.Entidades.Loja;
 
 public class ProdutoListagemDto {
-
     private Integer id;
     private String nome;
     private String fabricante;
