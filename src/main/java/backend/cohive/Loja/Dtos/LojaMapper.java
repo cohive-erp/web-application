@@ -1,6 +1,11 @@
 package backend.cohive.Loja.Dtos;
 
+import backend.cohive.Estoque.Dtos.EstoqueProdutoMapper;
+import backend.cohive.Estoque.Dtos.ProdutoListagemDto;
+import backend.cohive.Estoque.Entidades.Estoque;
 import backend.cohive.Loja.Entidades.Loja;
+
+import java.util.List;
 
 public class LojaMapper {
     public static Loja toEntity(LojaCriacaoDto lojaCriacaoDto, EnderecoDto enderecoDto){
@@ -58,5 +63,18 @@ public class LojaMapper {
         lojaConsultaDto.setUsuario(loja.getUsuario());
 
         return lojaConsultaDto;
+    }
+
+    public static List<ProdutoListagemDto> toProdutoListagemDto(List<Estoque> estoque){
+        return estoque.stream()
+                .map(EstoqueProdutoMapper::toProdutoListagemDto)
+                .toList();
+    }
+
+
+    public static LojaConsultaDto toConsultaDto(List<Loja> lojas){
+        return (LojaConsultaDto) lojas.stream()
+                .map(LojaMapper::toConsultaDto)
+                .toList();
     }
 }

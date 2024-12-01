@@ -12,10 +12,14 @@ import backend.cohive.Loja.Repository.LojaRepository;
 import backend.cohive.Observer.Alerta.Repository.AlertaRepository;
 import backend.cohive.Observer.EmailNotifier;
 import backend.cohive.domain.service.UsuarioService;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,6 +41,47 @@ public class EstoqueService {
     private EmailNotifier emailNotifier;
     @Autowired
     private UsuarioService usuarioService;
+    @Autowired
+    private RestTemplate restTemplate;
+
+    private static final String API_URL = "https://api.upcitemdb.com/prod/trial/lookup?upc={ean}";
+
+    public ResponseEntity<ProdutoListagemDto> preencherECadastrarProduto(EANCriacaoDto eanCriacaoDto) {
+        String apiResponse;
+
+        try {
+            apiResponse = restTemplate.getForObject(API_URL, String.class, eanCriacaoDto.getEan());
+        } catch (Exception e) {
+            // Identifica timeout ou erro na API externa
+            if (e.getCause() instanceof java.net.SocketTimeoutException) {
+                return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT)
+                        .body(null); // Timeout na API
+            }
+            return ResponseEntity.badRequest()
+                    .body(null); // Outro erro na API
+        }
+
+        JSONObject jsonResponse = new JSONObject(apiResponse);
+        JSONArray items = jsonResponse.optJSONArray("items");
+
+        if (items == null || items.isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body(null); // Nenhum dado encontrado para o EAN
+        }
+
+        // Criação do DTO e cadastro
+        ProdutoCriacaoDto produtoCriacaoDto = new ProdutoCriacaoDto();
+        produtoCriacaoDto.setNome(eanCriacaoDto.getNome());
+        produtoCriacaoDto.setFabricante(items.getJSONObject(0).optString("brand", "Fabricante não disponível"));
+        produtoCriacaoDto.setCategoria(items.getJSONObject(0).optString("category", "Categoria não disponível"));
+        produtoCriacaoDto.setDescricao(items.getJSONObject(0).optString("description", "Descrição não disponível"));
+        produtoCriacaoDto.setPrecoVenda(eanCriacaoDto.getPrecoVenda());
+        produtoCriacaoDto.setPrecoCompra(eanCriacaoDto.getPrecoCompra());
+        produtoCriacaoDto.setQuantidade(eanCriacaoDto.getQuantidade());
+        produtoCriacaoDto.setLoja(eanCriacaoDto.getLoja());
+
+        return cadastrarProdutoNovo(produtoCriacaoDto);
+    }
 
     public ResponseEntity<ProdutoListagemDto> cadastrarProdutoNovo(ProdutoCriacaoDto produtoCriacaoDto) {
         Optional<Loja> lojaOpt = lojaRepository.findById(produtoCriacaoDto.getLoja().getIdLoja());
