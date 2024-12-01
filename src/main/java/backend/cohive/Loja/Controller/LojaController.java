@@ -8,6 +8,7 @@ import backend.cohive.Loja.Entidades.Loja;
 import backend.cohive.Loja.Repository.LojaRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,14 +24,38 @@ public class LojaController {
     private LojaRepository lojaRepository;
 
     @PostMapping
-    public ResponseEntity<LojaConsultaDto> criar(@Valid @RequestBody LojaCriacaoDto lojaCriacaoDto){
+    public ResponseEntity<?> criar(@Valid @RequestBody LojaCriacaoDto lojaCriacaoDto) {
+        // Verifica se o usuário já possui uma loja cadastrada
+        Optional<Loja> lojaExistente = lojaRepository.findByUsuarioId(lojaCriacaoDto.getUsuario().getId());
+        if (lojaExistente.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Erro: O usuário já possui uma loja cadastrada.");
+        }
+
+        // Busca o endereço pelo CEP
         EnderecoDto enderecoDto = (EnderecoController.buscarEndereco(lojaCriacaoDto.getCEP())).getBody();
         Loja loja = LojaMapper.toEntity(lojaCriacaoDto, enderecoDto);
+
+        // Salva a nova loja
         Loja lojaSalva = lojaRepository.save(loja);
         LojaConsultaDto lojaConsultaDto = LojaMapper.toConsultaDto(loja);
 
-        return ResponseEntity.status(201).body(lojaConsultaDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(lojaConsultaDto);
     }
+
+
+    @GetMapping("/consulta/{idUser}")
+    public ResponseEntity<LojaConsultaDto> buscarPorIdUser(@PathVariable int idUser) {
+        Optional<Loja> loja = lojaRepository.findByUsuarioId(idUser);
+
+        if (loja.isPresent()) {
+            LojaConsultaDto lojaConsultaDto = LojaMapper.toConsultaDto(loja.get());
+            return ResponseEntity.ok(lojaConsultaDto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<LojaConsultaDto> atualizarLoja(@PathVariable int id, @Valid @RequestBody LojaCriacaoDto lojaCriacaoDto) {

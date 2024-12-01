@@ -16,6 +16,16 @@ public class EstoqueController {
     @Autowired
     private EstoqueService estoqueService;
 
+    @PostMapping("/preencher-produto")
+    public ResponseEntity<ProdutoListagemDto> preencherECadastrarProduto(@RequestBody EANCriacaoDto eanCriacaoDto) {
+        return estoqueService.preencherECadastrarProduto(eanCriacaoDto);
+    }
+
+//    @GetMapping("/preencher-dados")
+//    public ResponseEntity<ProdutoCriacaoDto> preencherDadosProduto(@RequestParam String ean) {
+//        return estoqueService.preencherDadosProduto(ean);
+//    }
+
     @PostMapping
     public ResponseEntity<ProdutoListagemDto> cadastrarProdutoNovo(@RequestBody ProdutoCriacaoDto produtoCriacaoDto) {
         return estoqueService.cadastrarProdutoNovo(produtoCriacaoDto);
