@@ -48,8 +48,10 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UsuarioTokenDto> login(@RequestBody UsuarioLoginDto usuarioLoginDTO) {
+    public ResponseEntity<UsuarioTokenDto> login(@RequestBody UsuarioLoginDto usuarioLoginDTO) throws ChangeSetPersister.NotFoundException {
         UsuarioTokenDto usuarioTokenDto = this.usuarioService.autenticar(usuarioLoginDTO);
+        Loja loja = usuarioService.getIdLoja(usuarioTokenDto.getUserId());
+        usuarioTokenDto.setLoja(loja);
 
         return ResponseEntity.status(200).body(usuarioTokenDto);
     }

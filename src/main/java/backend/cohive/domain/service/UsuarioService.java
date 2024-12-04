@@ -1,5 +1,7 @@
 package backend.cohive.domain.service;
 
+import backend.cohive.Loja.Entidades.Loja;
+import backend.cohive.Loja.Repository.LojaRepository;
 import backend.cohive.api.configuration.security.jwt.GerenciadorTokenJwt;
 import backend.cohive.api.configuration.security.jwt.JwtService;
 import backend.cohive.domain.Repository.UsuarioRepository;
@@ -41,6 +43,9 @@ public class UsuarioService {
 
     @Autowired
     private JavaMailSender mailSender;
+
+    @Autowired
+    private LojaRepository lojaRepository;
 
     @Autowired
     private JwtService jwtService;
@@ -85,6 +90,11 @@ public class UsuarioService {
 
     public Usuario findById(Integer id) throws ChangeSetPersister.NotFoundException {
         return usuarioRepository.findById(id)
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+    }
+
+    public Loja getIdLoja(Integer id) throws ChangeSetPersister.NotFoundException {
+        return lojaRepository.findByUsuarioId(id)
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
     }
 
