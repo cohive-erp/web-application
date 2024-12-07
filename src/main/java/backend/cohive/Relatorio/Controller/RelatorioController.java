@@ -1,9 +1,6 @@
 package backend.cohive.Relatorio.Controller;
 
 import backend.cohive.Estoque.Dtos.ProdutoVendidoDto;
-import backend.cohive.Estoque.Entidades.Produto;
-import backend.cohive.Estoque.Entidades.TransacaoEstoque;
-import backend.cohive.Estoque.Repository.TransacaoEstoqueRepository;
 import backend.cohive.Relatorio.Dtos.RelatorioMapper;
 import backend.cohive.Relatorio.Entidades.RelatorioEntidade;
 import backend.cohive.Relatorio.Service.RelatorioService;
@@ -16,13 +13,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+
 @RestController
 @RequestMapping("/api/relatorios")
 public class RelatorioController {
+
     @Autowired
     private RelatorioService relatorioService;
 
-    @GetMapping("/relatorio-transacoes")
+    @PostMapping("/relatorio-transacoes")
     public ResponseEntity<String> gerarRelatorioTransacoesCSV(@RequestParam String nomeArquivo) {
         try {
             relatorioService.gerarRelatorioTransacoesCSV(nomeArquivo);
@@ -53,10 +52,14 @@ public class RelatorioController {
         }
     }
 
-    @GetMapping("/relatorio-mensal")
-    public ResponseEntity<String> gerarRelatorioMensalCSV(@RequestParam String nomeArquivo, @RequestParam Integer mes, @RequestParam Integer ano) {
+    @PostMapping("/relatorio-mensal/{lojaId}")
+    public ResponseEntity<String> gerarRelatorioMensalCSV(
+            @RequestParam String nomeArquivo,
+            @RequestParam Integer mes,
+            @RequestParam Integer ano,
+            @PathVariable Integer lojaId) {
         try {
-            relatorioService.gerarRelatorioMensalCSV(nomeArquivo, mes, ano);
+            relatorioService.gerarRelatorioMensalCSV(nomeArquivo, mes, ano, lojaId);
 
             RelatorioEntidade relatorioEntidade = RelatorioMapper.fromTransacaotoRelatorioEntidade();
             RelatorioEntidade relatorioEntidadeNovo = relatorioService.criar(relatorioEntidade);
@@ -66,44 +69,41 @@ public class RelatorioController {
                     relatorioEntidadeNovo.getIdRelatorio(),
                     relatorioEntidadeNovo.getDescricao(),
                     relatorioEntidadeNovo.getDataCriacao()));
-
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao gerar relatório mensal: " + e.getMessage());
         }
     }
 
-    @GetMapping("/produto-mais-vendido")
-    public ResponseEntity<ProdutoVendidoDto> getMostSoldProduct() {
-        ProdutoVendidoDto produtoVendido = relatorioService.findMostSoldProduct();
+    @GetMapping("/produto-mais-vendido/{lojaId}")
+    public ResponseEntity<ProdutoVendidoDto> getMostSoldProductByLoja(@PathVariable Integer lojaId) {
+        ProdutoVendidoDto produtoVendido = relatorioService.findMostSoldProductByLoja(lojaId);
         if (produtoVendido != null) {
             return ResponseEntity.ok(produtoVendido);
         }
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/faturas-mensais")
-    public ResponseEntity<List<BigDecimal>> getMonthlyInvoicesForLastSixMonths() {
-        List<BigDecimal> monthlyInvoices = relatorioService.generateMonthlyInvoicesForLastSixMonths();
+    @GetMapping("/faturas-mensais/{lojaId}")
+    public ResponseEntity<List<BigDecimal>> getMonthlyInvoicesForLastSixMonthsByLoja(@PathVariable Integer lojaId) {
+        List<BigDecimal> monthlyInvoices = relatorioService.generateMonthlyInvoicesForLastSixMonthsByLoja(lojaId);
         return ResponseEntity.ok(monthlyInvoices);
     }
 
-    @GetMapping("/produtos-vendidos-mensal")
-    public ResponseEntity<List<Object[]>> getMonthlySoldProducts() {
-        List<Object[]> monthlySoldProducts = relatorioService.getMonthlySoldProducts();
+    @GetMapping("/produtos-vendidos-mensal/{lojaId}")
+    public ResponseEntity<List<Object[]>> getMonthlySoldProductsByLoja(@PathVariable Integer lojaId) {
+        List<Object[]> monthlySoldProducts = relatorioService.getMonthlySoldProductsByLoja(lojaId);
         return ResponseEntity.ok(monthlySoldProducts);
     }
 
-    @GetMapping("/fatura-diaria")
-    public ResponseEntity<BigDecimal> getDailyInvoice() {
-        BigDecimal dailyInvoice = relatorioService.generateDailyInvoice();
+    @GetMapping("/fatura-diaria/{lojaId}")
+    public ResponseEntity<BigDecimal> getDailyInvoiceByLoja(@PathVariable Integer lojaId) {
+        BigDecimal dailyInvoice = relatorioService.generateDailyInvoiceByLoja(lojaId);
         return ResponseEntity.ok(dailyInvoice);
     }
 
-
-    @GetMapping("/valor-vendas-ultimos-sete-dias")
-    public ResponseEntity<List<Object[]>> getWeeklySales() {
-        List<Object[]> weeklySales = relatorioService.getSalesForLastSevenDays();
+    @GetMapping("/valor-vendas-ultimos-sete-dias/{lojaId}")
+    public ResponseEntity<List<Object[]>> getSalesForLastSevenDaysByLoja(@PathVariable Integer lojaId) {
+        List<Object[]> weeklySales = relatorioService.getSalesForLastSevenDaysByLoja(lojaId);
         return ResponseEntity.ok(weeklySales);
     }
-
 }

@@ -51,7 +51,7 @@ public class RelatorioService {
 
     private static final Logger logger = Logger.getLogger(RelatorioService.class.getName());
 
-    public void gerarRelatorioMensalCSV(String nomeArquivo, Integer mes, Integer ano) {
+    public void gerarRelatorioMensalCSV(String nomeArquivo, Integer mes, Integer ano, Integer lojaId) {
         logger.info("Gerando relatório para o ano: " + ano + " e mês: " + mes);
 
         // Calculando datas de início e fim do mês
@@ -59,7 +59,7 @@ public class RelatorioService {
         LocalDateTime fimMes = inicioMes.plusMonths(1).minusSeconds(1);
 
         // Obtendo as transações mensais do repositório
-        List<TransacaoEstoque> transacoesSaida = transacaoEstoqueRepository.findAllByYearAndMonth(ano, mes);
+        List<TransacaoEstoque> transacoesSaida = transacaoEstoqueRepository.findAllByYearAndMonthAndLoja(ano, mes, lojaId);
 
         logger.info("Número de transações encontradas: " + transacoesSaida.size());
 
@@ -87,73 +87,84 @@ public class RelatorioService {
         }
     }
 
-    public ProdutoVendidoDto findMostSoldProduct() {
+    public ProdutoVendidoDto findMostSoldProductByLoja(Integer lojaId) {
         Pageable topOne = PageRequest.of(0, 1);
-        Page<Object[]> result = transacaoEstoqueRepository.findMostSoldProduct(topOne);
+        Page<Object[]> result = transacaoEstoqueRepository.findMostSoldProductByLoja(lojaId, topOne);
+
         if (!result.isEmpty()) {
             Object[] mostSoldProductData = result.getContent().get(0);
             Produto produto = (Produto) mostSoldProductData[0];
             Integer quantidadeVendida = ((Long) mostSoldProductData[1]).intValue();
             return new ProdutoVendidoDto(produto, quantidadeVendida);
         }
+
         return null;
     }
 
-    public List<BigDecimal> generateMonthlyInvoicesForLastSixMonths() {
+    public List<BigDecimal> generateMonthlyInvoicesForLastSixMonthsByLoja(Integer lojaId) {
         List<BigDecimal> monthlyInvoices = new ArrayList<>();
+
         for (int i = 0; i < 6; i++) {
             LocalDateTime startDate = LocalDateTime.now().minusMonths(i).withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
             LocalDateTime endDate = startDate.plusMonths(1).minusSeconds(1);
-            List<TransacaoEstoque> transactions = transacaoEstoqueRepository.findAllByDateRange(startDate, endDate);
-            System.out.println(transactions); // Imprime a lista de transações
+
+            List<TransacaoEstoque> transactions = transacaoEstoqueRepository.findAllByDateRangeAndLoja(startDate, endDate, lojaId);
+
             BigDecimal monthlyInvoice = transactions.stream()
                     .filter(t -> t.getTipoTransacao().equals("SAIDA"))
                     .map(t -> BigDecimal.valueOf(t.getEstoque().getProduto().getPrecoVenda()))
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
+
             monthlyInvoices.add(monthlyInvoice);
         }
+
         return monthlyInvoices;
     }
 
-    public BigDecimal generateDailyInvoice() {
+    public BigDecimal generateDailyInvoiceByLoja(Integer lojaId) {
         LocalDateTime startOfDay = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime endOfDay = startOfDay.plusDays(1).minusSeconds(1);
-        List<TransacaoEstoque> transactions = transacaoEstoqueRepository.findAllByDateRange(startOfDay, endOfDay);
-        System.out.println(transactions); // Imprime a lista de transações
+
+        List<TransacaoEstoque> transactions = transacaoEstoqueRepository.findAllByDateRangeAndLoja(startOfDay, endOfDay, lojaId);
+
         BigDecimal dailyInvoice = transactions.stream()
                 .filter(t -> t.getTipoTransacao().equals("SAIDA"))
                 .map(t -> BigDecimal.valueOf(t.getEstoque().getProduto().getPrecoVenda()))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+
         return dailyInvoice;
     }
 
-    public List<Object[]> getSalesForLastSevenDays() {
-        LocalDateTime startOfToday = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
-        LocalDateTime endOfToday = startOfToday.plusDays(7).minusSeconds(1);
-        LocalDateTime startOfLastWeek = startOfToday.minusDays(7);
-        List<Object[]> sales
-                = transacaoEstoqueRepository.findSalesForLastSevenDays(startOfLastWeek, endOfToday);
-        return sales;
+    public List<Object[]> getSalesForLastSevenDaysByLoja(Integer lojaId) {
+        LocalDateTime startOfLastWeek = LocalDateTime.now().minusDays(7).withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime endOfToday = LocalDateTime.now().withHour(23).withMinute(59).withSecond(59).withNano(0);
+
+        return transacaoEstoqueRepository.findSalesForLastSevenDaysByLoja(startOfLastWeek, endOfToday, lojaId);
     }
 
-    public List<Object[]> getMonthlySoldProducts() {
+    public List<Object[]> getMonthlySoldProductsByLoja(Integer lojaId) {
         List<Object[]> monthlySoldProducts = new ArrayList<>();
+
         for (int i = 0; i < 6; i++) {
             LocalDateTime startDate = LocalDateTime.now().minusMonths(i).withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
             LocalDateTime endDate = startDate.plusMonths(1).minusSeconds(1);
-            List<TransacaoEstoque> transactions = transacaoEstoqueRepository.findAllByDateRange(startDate, endDate);
+
+            List<TransacaoEstoque> transactions = transacaoEstoqueRepository.findAllByDateRangeAndLoja(startDate, endDate, lojaId);
 
             Object[] monthlySoldProduct = new Object[2];
             monthlySoldProduct[0] = transactions.stream()
                     .map(t -> t.getEstoque().getProduto())
                     .distinct()
                     .count();
+
             monthlySoldProduct[1] = transactions.stream()
                     .filter(t -> t.getTipoTransacao().equals("SAIDA"))
-                    .mapToInt(t -> t.getQuantidadeAntesTransacao())
+                    .mapToInt(TransacaoEstoque::getQuantidadeAntesTransacao)
                     .sum();
+
             monthlySoldProducts.add(monthlySoldProduct);
         }
+
         return monthlySoldProducts;
     }
 }

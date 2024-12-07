@@ -14,15 +14,20 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TransacaoEstoqueRepository extends JpaRepository<TransacaoEstoque, Integer> {
-    @Query("SELECT t FROM TransacaoEstoque t WHERE (YEAR(t.dataSaida) = :year AND MONTH(t.dataSaida) = :month) OR (YEAR(t.dataEntradaNova) = :year AND MONTH(t.dataEntradaNova) = :month)")
-    List<TransacaoEstoque> findAllByYearAndMonth(@Param("year") int year, @Param("month") int month);
 
-    @Query("SELECT t.estoque.produto, SUM(t.quantidadeAntesTransacao) as total FROM TransacaoEstoque t GROUP BY t.estoque.produto ORDER BY total DESC")
-    Page<Object[]> findMostSoldProduct(Pageable pageable);
+    @Query("SELECT t FROM TransacaoEstoque t WHERE ((YEAR(t.dataSaida) = :year AND MONTH(t.dataSaida) = :month) OR (YEAR(t.dataEntradaNova) = :year AND MONTH(t.dataEntradaNova) = :month)) AND t.estoque.loja.id = :lojaId")
+    List<TransacaoEstoque> findAllByYearAndMonthAndLoja(@Param("year") int year, @Param("month") int month, @Param("lojaId") Integer lojaId);
 
-    @Query("SELECT t FROM TransacaoEstoque t WHERE (t.dataSaida BETWEEN :startDate AND :endDate) AND t.tipoTransacao = 'SAIDA'")
-    List<TransacaoEstoque> findAllByDateRange(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
 
-    @Query("SELECT t.dataSaida, SUM(t.quantidadeAntesTransacao) FROM TransacaoEstoque t WHERE (t.dataSaida BETWEEN :startDate AND :endDate) GROUP BY t.dataSaida")
-    List<Object[]> findSalesForLastSevenDays(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+    @Query("SELECT t.estoque.produto, SUM(t.quantidadeAntesTransacao) as total FROM TransacaoEstoque t WHERE t.estoque.loja.id = :lojaId GROUP BY t.estoque.produto ORDER BY total DESC")
+    Page<Object[]> findMostSoldProductByLoja(@Param("lojaId") Integer lojaId, Pageable pageable);
+
+
+    @Query("SELECT t FROM TransacaoEstoque t WHERE (t.dataSaida BETWEEN :startDate AND :endDate) AND t.tipoTransacao = 'SAIDA' AND t.estoque.loja.id = :lojaId")
+    List<TransacaoEstoque> findAllByDateRangeAndLoja(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate, @Param("lojaId") Integer lojaId);
+
+
+    @Query("SELECT t.dataSaida, SUM(t.quantidadeAntesTransacao) FROM TransacaoEstoque t WHERE (t.dataSaida BETWEEN :startDate AND :endDate) AND t.estoque.loja.id = :lojaId GROUP BY t.dataSaida")
+    List<Object[]> findSalesForLastSevenDaysByLoja(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate, @Param("lojaId") Integer lojaId);
+
 }
