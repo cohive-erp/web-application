@@ -22,6 +22,8 @@ public class EstoqueController {
 
     @PostMapping("/preencher-produto")
     public ResponseEntity<ProdutoListagemDto> preencherECadastrarProduto(@RequestBody EANCriacaoDto eanCriacaoDto) {
+        System.out.println("teste1");
+        System.out.println("teste2");
         return estoqueService.preencherECadastrarProduto(eanCriacaoDto);
     }
 
